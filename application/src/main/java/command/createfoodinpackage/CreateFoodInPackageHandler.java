@@ -5,8 +5,10 @@ import core.BusinessRuleValidationException;
 import dto.FoodPackageDTO;
 import factories.foodpackage.CreateFoodPackage;
 import factories.foodpackage.FoodPackageFactory;
+import infrastructure.model.CustomException;
 import infrastructure.model.Food;
 import infrastructure.model.FoodPackage;
+import infrastructure.model.FoodPackageStatus;
 import infrastructure.repositories.FoodPackageRepository;
 import infrastructure.repositories.FoodRepository;
 import mappers.FoodMapper;
@@ -35,7 +37,11 @@ public class CreateFoodInPackageHandler implements Command.Handler<CreateFoodInP
   public FoodPackageDTO handle(CreateFoodInPackageCommand request) {
     try {
       FoodPackage foodPackage = foodPackageRepository.get(UUID.fromString(request.foodDTO.foodPackageId()));
-      if (foodPackage == null) return null;
+      if (foodPackage == null) throw new CustomException("Food package not found");
+
+      if (foodPackage.getStatus() != FoodPackageStatus.EMPTY && foodPackage.getStatus() != FoodPackageStatus.COOKING) {
+        throw new CustomException("Cannot add more food because food package is in " + foodPackage.getStatus().toString() + " status");
+      }
 
       Food foodToAdd = FoodMapper.from(request.foodDTO);
       foodRepository.create(foodToAdd);

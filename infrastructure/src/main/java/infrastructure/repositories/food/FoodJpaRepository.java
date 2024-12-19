@@ -1,6 +1,7 @@
 package infrastructure.repositories.food;
 
 import core.BusinessRuleValidationException;
+import infrastructure.model.CustomException;
 import infrastructure.model.Food;
 import infrastructure.model.FoodJpaModel;
 import infrastructure.model.FoodPackageJpaModel;
@@ -27,7 +28,7 @@ public class FoodJpaRepository implements FoodRepository {
   @Override
   public Food get(UUID id) throws BusinessRuleValidationException {
     FoodJpaModel food = foodCrudRepository.findById(id).orElse(null);
-    if (food == null) return null;
+    if (food == null) throw new CustomException("Food not found");
 
     return FoodUtils.jpaToFood(food);
   }
@@ -48,7 +49,7 @@ public class FoodJpaRepository implements FoodRepository {
   @Override
   public UUID update(Food food) {
     FoodPackageJpaModel foodPackageJpaModel = foodPackageCrudRepository.findById(food.getFoodPackageId()).orElse(null);
-    if (foodPackageJpaModel == null) return null;
+    if (foodPackageJpaModel == null) throw new CustomException("Food package not found");
 
     FoodJpaModel foodJpaModel = FoodUtils.foodToJpaEntity(food, foodPackageJpaModel);
     return foodCrudRepository.save(foodJpaModel).getId();
@@ -59,7 +60,7 @@ public class FoodJpaRepository implements FoodRepository {
     FoodPackageJpaModel foodPackageJpaModel = foodPackageCrudRepository.findById(foodPackageId).orElse(null);
     if (foodPackageJpaModel == null) return Collections.emptyList();
 
-    List<FoodJpaModel> jpaModels = foodCrudRepository.findByFoodPackageId(foodPackageJpaModel);
+    List<FoodJpaModel> jpaModels = foodCrudRepository.findByFoodPackageId(foodPackageId);
     if (jpaModels == null || jpaModels.isEmpty()) return Collections.emptyList();
 
     List<Food> foods = new ArrayList<>();

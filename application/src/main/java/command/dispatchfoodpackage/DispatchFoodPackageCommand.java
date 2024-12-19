@@ -2,11 +2,12 @@ package command.dispatchfoodpackage;
 
 import an.awesome.pipelinr.Command;
 import dto.FoodPackageDTO;
+import dto.PackDispatchFoodPackageDTO;
 
 public class DispatchFoodPackageCommand implements Command<FoodPackageDTO> {
-  FoodPackageDTO foodPackageDTO;
+  String foodPackageId;
 
-  public DispatchFoodPackageCommand(FoodPackageDTO foodPackageDTO) {
-    this.foodPackageDTO = foodPackageDTO;
+  public DispatchFoodPackageCommand(String foodPackageId) {
+    this.foodPackageId = foodPackageId;
   }
 }

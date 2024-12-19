@@ -54,7 +54,7 @@ public class Food extends Entity {
   public void nextStatus(FoodStatus newStatus) {
     if (!isValidTransition(this.status, newStatus)) {
       throw new IllegalStateException(
-        String.format("Invalid transition from %s to %s", this.status, newStatus));
+        String.format("Invalid transition of Food from %s to %s", this.status, newStatus));
     }
     this.status = newStatus;
   }

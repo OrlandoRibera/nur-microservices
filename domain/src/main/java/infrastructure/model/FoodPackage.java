@@ -40,7 +40,7 @@ public class FoodPackage extends AggregateRoot {
 
   public void nextStatus(FoodPackageStatus newStatus) {
     if (!isValidTransition(this.status, newStatus)) {
-      throw new IllegalStateException(String.format("Invalid transition from %s to %s", this.status, newStatus));
+      throw new IllegalStateException(String.format("Invalid transition of Food Package from %s to %s", this.status, newStatus));
     }
 
     this.status = newStatus;

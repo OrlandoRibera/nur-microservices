@@ -10,5 +10,5 @@ import java.util.UUID;
 
 @Repository
 public interface FoodCrudRepository extends CrudRepository<FoodJpaModel, UUID> {
-  List<FoodJpaModel> findByFoodPackageId(FoodPackageJpaModel foodPackage);
+  List<FoodJpaModel> findByFoodPackageId(UUID foodPackageId);
 }

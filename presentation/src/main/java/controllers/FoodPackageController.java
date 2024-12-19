@@ -4,9 +4,12 @@ import an.awesome.pipelinr.Pipeline;
 import command.changefoodstatus.ChangeFoodStatusCommand;
 import command.createfoodinpackage.CreateFoodInPackageCommand;
 import command.createfoodpackage.CreateFoodPackageCommand;
+import command.dispatchfoodpackage.DispatchFoodPackageCommand;
+import command.packfoodpackage.PackFoodPackageCommand;
 import dto.ChangeFoodStatusDTO;
 import dto.FoodDTO;
 import dto.FoodPackageDTO;
+import dto.PackDispatchFoodPackageDTO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +40,17 @@ public class FoodPackageController {
   public FoodDTO updateFoodStatus(@RequestBody ChangeFoodStatusDTO changeFoodStatusDTO) {
     ChangeFoodStatusCommand changeFoodStatusCommand = new ChangeFoodStatusCommand(changeFoodStatusDTO);
     return changeFoodStatusCommand.execute(pipeline);
+  }
+
+  @PostMapping("/packFoodPackage")
+  public FoodPackageDTO packFoodPackage(@RequestBody FoodPackageDTO foodPackageId) {
+    PackFoodPackageCommand packFoodPackageCommand = new PackFoodPackageCommand(foodPackageId.id());
+    return packFoodPackageCommand.execute(pipeline);
+  }
+
+  @PostMapping("/dispatchFoodPackage")
+  public FoodPackageDTO dispatchFoodPackage(@RequestBody FoodPackageDTO foodPackageId) {
+    DispatchFoodPackageCommand dispatchFoodPackageCommand = new DispatchFoodPackageCommand(foodPackageId.id());
+    return dispatchFoodPackageCommand.execute(pipeline);
   }
 }

@@ -1,6 +1,7 @@
 package infrastructure.repositories.foodpackage;
 
 import core.BusinessRuleValidationException;
+import infrastructure.model.CustomException;
 import infrastructure.model.FoodJpaModel;
 import infrastructure.model.FoodPackage;
 import infrastructure.model.FoodPackageJpaModel;
@@ -37,12 +38,14 @@ public class FoodPackageJpaRepository implements FoodPackageRepository {
   @Override
   public UUID update(FoodPackage foodPackage) {
     FoodPackageJpaModel foodPackageJpaModel = foodPackageCrudRepository.findById(foodPackage.getId()).orElse(null);
-    if (foodPackageJpaModel == null) return null;
+    if (foodPackageJpaModel == null) throw new CustomException("Food package not found");
 
     foodPackageJpaModel.getFoods().clear();
 
     List<FoodJpaModel> foods = FoodUtils.foodToJpaEntities(foodPackage.getFoods(), foodPackageJpaModel);
     foodPackageJpaModel.getFoods().addAll(foods);
+    foodPackageJpaModel.setStatus(foodPackage.getStatus().toString());
+
     return foodPackageCrudRepository.save(foodPackageJpaModel).getId();
   }
 
@@ -50,7 +53,7 @@ public class FoodPackageJpaRepository implements FoodPackageRepository {
   public FoodPackage get(UUID id) throws BusinessRuleValidationException {
 
     FoodPackageJpaModel foodPackage = foodPackageCrudRepository.findById(id).orElse(null);
-    if (foodPackage == null) return null;
+    if (foodPackage == null) throw new CustomException("Food package not found");
 
     return FoodPackageUtils.jpaModelToFoodPackage(foodPackage);
   }
@@ -58,7 +61,7 @@ public class FoodPackageJpaRepository implements FoodPackageRepository {
   @Override
   public FoodPackage findByRecipeIdAndClientId(UUID recipeId, UUID clientId) throws BusinessRuleValidationException {
     FoodPackageJpaModel foodPackageJpaModel = foodPackageCrudRepository.findByRecipeIdAndClientId(recipeId, clientId);
-    if (foodPackageJpaModel == null) return null;
+    if (foodPackageJpaModel == null) throw new CustomException("Food package not found");
 
     return FoodPackageUtils.jpaModelToFoodPackage(foodPackageJpaModel);
   }

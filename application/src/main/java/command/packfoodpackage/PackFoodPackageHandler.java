@@ -1,4 +1,4 @@
-package command.dispatchfoodpackage;
+package command.packfoodpackage;
 
 import an.awesome.pipelinr.Command;
 import core.BusinessRuleValidationException;
@@ -14,17 +14,17 @@ import org.springframework.stereotype.Component;
 import java.util.UUID;
 
 @Component
-public class DispatchFoodPackageHandler implements Command.Handler<DispatchFoodPackageCommand, FoodPackageDTO> {
+public class PackFoodPackageHandler implements Command.Handler<PackFoodPackageCommand, FoodPackageDTO> {
   @Autowired
   private FoodPackageRepository foodPackageRepository;
 
   @Override
-  public FoodPackageDTO handle(DispatchFoodPackageCommand request) {
+  public FoodPackageDTO handle(PackFoodPackageCommand request) {
     try {
       FoodPackage foodPackage = foodPackageRepository.get(UUID.fromString(request.foodPackageId));
       if (foodPackage == null) throw new CustomException("Food package not found");
 
-      foodPackage.nextStatus(FoodPackageStatus.DISPATCHED);
+      foodPackage.nextStatus(FoodPackageStatus.PACKED);
 
       foodPackageRepository.update(foodPackage);
       return FoodPackageMapper.from(foodPackage);
