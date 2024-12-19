@@ -18,13 +18,30 @@ public class FoodPackageJpaRepository implements FoodPackageRepository {
   @Autowired
   private FoodPackageCrudRepository foodPackageCrudRepository;
 
+
+  @Override
+  public UUID create(FoodPackage foodPackage) {
+    FoodPackageJpaModel jpaModel = new FoodPackageJpaModel();
+    List<FoodJpaModel> foods = FoodUtils.foodToJpaEntities(foodPackage.getFoods(), jpaModel);
+
+    jpaModel.setId(foodPackage.getId());
+    jpaModel.setStatus(foodPackage.getStatus().name());
+    jpaModel.setRecipeId(foodPackage.getRecipeId());
+    jpaModel.setClientId(foodPackage.getClientId());
+    jpaModel.setAddressId(foodPackage.getAddressId());
+    jpaModel.setFoods(foods);
+
+    return foodPackageCrudRepository.save(jpaModel).getId();
+  }
+
   @Override
   public UUID update(FoodPackage foodPackage) {
     FoodPackageJpaModel foodPackageJpaModel = foodPackageCrudRepository.findById(foodPackage.getId()).orElse(null);
     if (foodPackageJpaModel == null) return null;
 
     List<FoodJpaModel> foods = FoodUtils.foodToJpaEntities(foodPackage.getFoods(), foodPackageJpaModel);
-    return FoodPackageUtils.foodPackageToJpaEntity(foodPackage, foods).getId();
+    foodPackageJpaModel.setFoods(foods);
+    return foodPackageCrudRepository.save(foodPackageJpaModel).getId();
   }
 
   @Override

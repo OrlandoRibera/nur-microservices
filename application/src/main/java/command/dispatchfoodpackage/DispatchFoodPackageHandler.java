@@ -6,6 +6,7 @@ import dto.FoodPackageDTO;
 import mappers.FoodPackageMapper;
 import infrastructure.model.FoodPackage;
 import infrastructure.model.FoodPackageStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import infrastructure.repositories.FoodPackageRepository;
 
@@ -13,10 +14,10 @@ import java.util.UUID;
 
 @Component
 public class DispatchFoodPackageHandler implements Command.Handler<DispatchFoodPackageCommand, FoodPackageDTO> {
-  private final FoodPackageRepository foodPackageRepository;
+  @Autowired
+  private FoodPackageRepository foodPackageRepository;
 
-  public DispatchFoodPackageHandler(FoodPackageRepository foodPackageRepository) {
-    this.foodPackageRepository = foodPackageRepository;
+  public DispatchFoodPackageHandler() {
   }
 
   @Override

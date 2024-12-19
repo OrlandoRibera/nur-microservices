@@ -19,6 +19,7 @@ public final class FoodMapper {
   }
 
   public static Food from(FoodDTO foodDTO) throws BusinessRuleValidationException {
-    return new Food(foodDTO.name(), FoodType.valueOf(foodDTO.type()), foodDTO.kcal(), UUID.fromString(foodDTO.foodPackageId()));
+    FoodType foodType = FoodType.valueOf(foodDTO.type());
+    return new Food(foodDTO.name(), foodType, foodDTO.kcal(), UUID.fromString(foodDTO.foodPackageId()));
   }
 }

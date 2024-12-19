@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.UUID;
 
 public interface FoodRepository {
+  UUID create(Food food);
+
   UUID update(Food food);
 
   List<Food> findByFoodPackageId(UUID foodPackageId) throws BusinessRuleValidationException;

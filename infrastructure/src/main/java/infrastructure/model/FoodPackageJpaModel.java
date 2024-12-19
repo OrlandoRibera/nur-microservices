@@ -2,6 +2,7 @@ package infrastructure.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@NoArgsConstructor
 @Getter
 @Setter
 @Table(name = "food_packages")
@@ -32,4 +34,8 @@ public class FoodPackageJpaModel {
 
   @OneToMany(mappedBy = "foodPackage", cascade = CascadeType.REMOVE)
   private List<FoodJpaModel> foods = new ArrayList<>();
+
+  public FoodPackageJpaModel(UUID id) {
+    this.id = id;
+  }
 }

@@ -29,16 +29,15 @@ public class CateringApiApplication {
     SpringApplication.run(CateringApiApplication.class, args);
   }
 
-  // TODO: Check error with injections
-//  @Bean(name = "foodRepository")
-//  public FoodRepository foodRepository() {
-//    return new FoodJpaRepository();
-//  }
-//
-//  @Bean(name = "foodPackageRepository")
-//  public FoodPackageRepository foodPackageRepository() {
-//    return new FoodPackageJpaRepository();
-//  }
+  @Bean(name = "foodRepository")
+  public FoodRepository foodRepository() {
+    return new FoodJpaRepository();
+  }
+
+  @Bean(name = "foodPackageRepository")
+  public FoodPackageRepository foodPackageRepository() {
+    return new FoodPackageJpaRepository();
+  }
 
   @Bean
   Pipeline pipeline(

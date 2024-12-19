@@ -7,6 +7,7 @@ import factories.foodpackage.FoodPackageFactory;
 import mappers.FoodPackageMapper;
 import infrastructure.model.FoodPackage;
 import infrastructure.model.FoodPackageStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import infrastructure.repositories.FoodPackageRepository;
 
@@ -16,11 +17,12 @@ import java.util.UUID;
 @Component
 public class CreateFoodPackageHandler implements Command.Handler<CreateFoodPackageCommand, FoodPackageDTO> {
   private final FoodPackageFactory foodPackageFactory;
-  private final FoodPackageRepository foodPackageRepository;
 
-  public CreateFoodPackageHandler(FoodPackageRepository foodPackageRepository) {
+  @Autowired
+  private FoodPackageRepository foodPackageRepository;
+
+  public CreateFoodPackageHandler() {
     this.foodPackageFactory = new CreateFoodPackage();
-    this.foodPackageRepository = foodPackageRepository;
   }
 
   @Override
@@ -33,7 +35,7 @@ public class CreateFoodPackageHandler implements Command.Handler<CreateFoodPacka
       FoodPackageStatus.EMPTY
     );
 
-    foodPackageRepository.update(foodPackage);
+    foodPackageRepository.create(foodPackage);
     return FoodPackageMapper.from(foodPackage);
   }
 }

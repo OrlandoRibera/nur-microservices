@@ -25,6 +25,19 @@ public class FoodJpaRepository implements FoodRepository {
   private FoodPackageCrudRepository foodPackageCrudRepository;
 
   @Override
+  public UUID create(Food food) {
+    FoodJpaModel jpaModel = new FoodJpaModel();
+    jpaModel.setId(food.getId());
+    jpaModel.setName(food.getName());
+    jpaModel.setStatus(food.getStatus().name());
+    jpaModel.setKcal(food.getKcal());
+    jpaModel.setType(food.getType().name());
+    jpaModel.setFoodPackage(new FoodPackageJpaModel(food.getFoodPackageId()));
+
+    return foodCrudRepository.save(jpaModel).getId();
+  }
+
+  @Override
   public UUID update(Food food) {
     FoodPackageJpaModel foodPackageJpaModel = foodPackageCrudRepository.findById(food.getFoodPackageId()).orElse(null);
     if (foodPackageJpaModel == null) return null;
