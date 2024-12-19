@@ -2,10 +2,7 @@ package infrastructure.utils;
 
 import annotations.Generated;
 import core.BusinessRuleValidationException;
-import infrastructure.model.Food;
-import infrastructure.model.FoodJpaModel;
-import infrastructure.model.FoodPackageJpaModel;
-import infrastructure.model.FoodType;
+import infrastructure.model.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +26,6 @@ public class FoodUtils {
   }
 
   public static Food jpaToFood(FoodJpaModel jpaModel) throws BusinessRuleValidationException {
-    return new Food(jpaModel.getId(), jpaModel.getName(), FoodType.valueOf(jpaModel.getType()), jpaModel.getKcal(), jpaModel.getFoodPackage().getId());
+    return new Food(jpaModel.getId(), jpaModel.getName(), FoodType.valueOf(jpaModel.getType()), FoodStatus.valueOf(jpaModel.getStatus()), jpaModel.getKcal(), jpaModel.getFoodPackage().getId());
   }
 }

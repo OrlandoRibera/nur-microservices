@@ -35,12 +35,13 @@ public class ChangeFoodStatusHandler implements Command.Handler<ChangeFoodStatus
       if (food == null) return null;
 
       FoodStatus newStatus = FoodStatus.valueOf(request.changeFoodStatusDTO.newStatus());
+      food.nextStatus(newStatus);
 
       Food foodUpdated = foodFactory.create(
         food.getId(),
         food.getName(),
         food.getType(),
-        newStatus,
+        food.getStatus(),
         food.getKcal(),
         food.getFoodPackageId()
       );
