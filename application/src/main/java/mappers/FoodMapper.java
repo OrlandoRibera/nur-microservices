@@ -10,6 +10,7 @@ import java.util.UUID;
 public final class FoodMapper {
   public static FoodDTO from(Food food) {
     return new FoodDTO(
+      food.getId().toString(),
       food.getName(),
       food.getStatus().name(),
       food.getType().name(),

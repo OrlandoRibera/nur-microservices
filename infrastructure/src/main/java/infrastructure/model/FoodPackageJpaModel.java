@@ -32,7 +32,7 @@ public class FoodPackageJpaModel {
   @Column(nullable = false)
   private String status;
 
-  @OneToMany(mappedBy = "foodPackage", cascade = CascadeType.REMOVE)
+  @OneToMany(mappedBy = "foodPackage", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<FoodJpaModel> foods = new ArrayList<>();
 
   public FoodPackageJpaModel(UUID id) {

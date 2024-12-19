@@ -21,7 +21,7 @@ public class FoodPackageUtils {
       .filter(Objects::nonNull)
       .toList();
 
-    return new FoodPackage(jpaModel.getRecipeId(), jpaModel.getClientId(), jpaModel.getAddressId(), foods, FoodPackageStatus.valueOf(jpaModel.getStatus()));
+    return new FoodPackage(jpaModel.getId(), jpaModel.getRecipeId(), jpaModel.getClientId(), jpaModel.getAddressId(), foods, FoodPackageStatus.valueOf(jpaModel.getStatus()));
   }
 
   public static FoodPackageJpaModel foodPackageToJpaEntity(

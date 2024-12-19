@@ -39,8 +39,10 @@ public class FoodPackageJpaRepository implements FoodPackageRepository {
     FoodPackageJpaModel foodPackageJpaModel = foodPackageCrudRepository.findById(foodPackage.getId()).orElse(null);
     if (foodPackageJpaModel == null) return null;
 
+    foodPackageJpaModel.getFoods().clear();
+
     List<FoodJpaModel> foods = FoodUtils.foodToJpaEntities(foodPackage.getFoods(), foodPackageJpaModel);
-    foodPackageJpaModel.setFoods(foods);
+    foodPackageJpaModel.getFoods().addAll(foods);
     return foodPackageCrudRepository.save(foodPackageJpaModel).getId();
   }
 

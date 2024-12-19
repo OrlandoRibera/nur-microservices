@@ -29,6 +29,6 @@ public class FoodUtils {
   }
 
   public static Food jpaToFood(FoodJpaModel jpaModel) throws BusinessRuleValidationException {
-    return new Food(jpaModel.getName(), FoodType.valueOf(jpaModel.getType()), jpaModel.getKcal(), jpaModel.getFoodPackage().getId());
+    return new Food(jpaModel.getId(), jpaModel.getName(), FoodType.valueOf(jpaModel.getType()), jpaModel.getKcal(), jpaModel.getFoodPackage().getId());
   }
 }

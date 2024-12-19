@@ -25,6 +25,14 @@ public class FoodJpaRepository implements FoodRepository {
   private FoodPackageCrudRepository foodPackageCrudRepository;
 
   @Override
+  public Food get(UUID id) throws BusinessRuleValidationException {
+    FoodJpaModel food = foodCrudRepository.findById(id).orElse(null);
+    if (food == null) return null;
+
+    return FoodUtils.jpaToFood(food);
+  }
+
+  @Override
   public UUID create(Food food) {
     FoodJpaModel jpaModel = new FoodJpaModel();
     jpaModel.setId(food.getId());
