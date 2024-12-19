@@ -36,7 +36,6 @@ public class FoodPackage extends AggregateRoot {
 
   public void createFood(String name, FoodType foodType, float kcal) throws BusinessRuleValidationException {
     this.foods.add(new Food(name, foodType, kcal, this.id));
-    // TODO: Verify if is necessary a domain event to announce a food added
   }
 
   public void nextStatus(FoodPackageStatus newStatus) {
