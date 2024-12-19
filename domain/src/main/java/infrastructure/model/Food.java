@@ -42,6 +42,15 @@ public class Food extends Entity {
     this.foodPackageId = foodPackageId;
   }
 
+  public Food(UUID id, String name, FoodType type, FoodStatus foodStatus, float kcal, UUID foodPackageId) throws BusinessRuleValidationException {
+    this.id = id;
+    this.name = name;
+    this.status = foodStatus;
+    this.type = type;
+    this.kcal = new FoodKcalValue(kcal);
+    this.foodPackageId = foodPackageId;
+  }
+
   public void nextStatus(FoodStatus newStatus) {
     if (!isValidTransition(this.status, newStatus)) {
       throw new IllegalStateException(

@@ -34,7 +34,7 @@ public class FoodPackageController {
   }
 
   @PostMapping("/updateFoodStatus")
-  public FoodPackageDTO updateFoodStatus(@RequestBody ChangeFoodStatusDTO changeFoodStatusDTO) {
+  public FoodDTO updateFoodStatus(@RequestBody ChangeFoodStatusDTO changeFoodStatusDTO) {
     ChangeFoodStatusCommand changeFoodStatusCommand = new ChangeFoodStatusCommand(changeFoodStatusDTO);
     return changeFoodStatusCommand.execute(pipeline);
   }
