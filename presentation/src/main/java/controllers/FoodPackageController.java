@@ -5,15 +5,15 @@ import command.changefoodstatus.ChangeFoodStatusCommand;
 import command.createfoodinpackage.CreateFoodInPackageCommand;
 import command.createfoodpackage.CreateFoodPackageCommand;
 import command.dispatchfoodpackage.DispatchFoodPackageCommand;
+import command.getFoodPackages.GetFoodPackagesCommand;
 import command.packfoodpackage.PackFoodPackageCommand;
 import dto.ChangeFoodStatusDTO;
 import dto.FoodDTO;
 import dto.FoodPackageDTO;
 import dto.PackDispatchFoodPackageDTO;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/catering")
@@ -52,5 +52,11 @@ public class FoodPackageController {
   public FoodPackageDTO dispatchFoodPackage(@RequestBody FoodPackageDTO foodPackageId) {
     DispatchFoodPackageCommand dispatchFoodPackageCommand = new DispatchFoodPackageCommand(foodPackageId.id());
     return dispatchFoodPackageCommand.execute(pipeline);
+  }
+
+  @GetMapping("/getAllPackages")
+  public List<FoodPackageDTO> getFoodPackages() {
+    GetFoodPackagesCommand getFoodPackagesCommand = new GetFoodPackagesCommand();
+    return getFoodPackagesCommand.execute(pipeline);
   }
 }

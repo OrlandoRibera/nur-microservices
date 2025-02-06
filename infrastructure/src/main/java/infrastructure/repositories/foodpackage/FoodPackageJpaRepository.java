@@ -11,8 +11,11 @@ import infrastructure.repositories.FoodPackageRepository;
 import infrastructure.utils.FoodPackageUtils;
 import infrastructure.utils.FoodUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Repository
 public class FoodPackageJpaRepository implements FoodPackageRepository {
@@ -47,6 +50,17 @@ public class FoodPackageJpaRepository implements FoodPackageRepository {
     foodPackageJpaModel.setStatus(foodPackage.getStatus().toString());
 
     return foodPackageCrudRepository.save(foodPackageJpaModel).getId();
+  }
+
+  @Override
+  public List<FoodPackage> getAll() throws BusinessRuleValidationException {
+    List<FoodPackageJpaModel> foodPackageJpaModel = StreamSupport.stream(foodPackageCrudRepository.findAll().spliterator(), false).collect(Collectors.toList());
+
+    List<FoodPackage> foodPackages = new ArrayList<>();
+    for (FoodPackageJpaModel foodPackage : foodPackageJpaModel) {
+      foodPackages.add(FoodPackageUtils.jpaModelToFoodPackage(foodPackage));
+    }
+    return foodPackages;
   }
 
   @Override
