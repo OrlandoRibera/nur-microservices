@@ -34,7 +34,7 @@ class FoodPackageTest {
       UUID.randomUUID(),
       UUID.randomUUID(),
       new ArrayList<>(),
-      FoodPackageStatus.EMPTY
+      FoodPackageStatus.NEW
     );
 
     assertThrows(IllegalStateException.class, () -> foodPackage.nextStatus(FoodPackageStatus.DISPATCHED));
@@ -77,7 +77,7 @@ class FoodPackageTest {
       UUID.randomUUID(),
       UUID.randomUUID(),
       new ArrayList<>(),
-      FoodPackageStatus.EMPTY
+      FoodPackageStatus.NEW
     );
 
     foodPackage.createFood("Pizza", FoodType.BREAKFAST, 300);
@@ -93,7 +93,7 @@ class FoodPackageTest {
       UUID.randomUUID(),
       UUID.randomUUID(),
       new ArrayList<>(),
-      FoodPackageStatus.EMPTY
+      FoodPackageStatus.NEW
     );
 
     assertThrows(BusinessRuleValidationException.class, () -> foodPackage.createFood("Pizza", FoodType.BREAKFAST, -10));

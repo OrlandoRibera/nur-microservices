@@ -53,7 +53,7 @@ public class ChangeFoodStatusHandler implements Command.Handler<ChangeFoodStatus
       FoodPackage foodPackage = foodPackageRepository.get(food.getFoodPackageId());
 
       // if foodpackage is empty, move it to cooking
-      if (foodPackage.getStatus() == FoodPackageStatus.EMPTY) {
+      if (foodPackage.getStatus() == FoodPackageStatus.NEW) {
         foodPackage.nextStatus(FoodPackageStatus.COOKING);
       }
 

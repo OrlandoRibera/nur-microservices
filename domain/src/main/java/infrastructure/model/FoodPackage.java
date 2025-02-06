@@ -75,7 +75,7 @@ public class FoodPackage extends AggregateRoot {
   private boolean isValidTransition(FoodPackageStatus current, FoodPackageStatus next) {
     EnumMap<FoodPackageStatus, List<FoodPackageStatus>> validTransitions = new EnumMap<>(FoodPackageStatus.class);
 
-    validTransitions.put(FoodPackageStatus.EMPTY, List.of(FoodPackageStatus.COOKING));
+    validTransitions.put(FoodPackageStatus.NEW, List.of(FoodPackageStatus.COOKING));
     validTransitions.put(FoodPackageStatus.COOKING, List.of(FoodPackageStatus.COOKED));
     validTransitions.put(FoodPackageStatus.COOKED, List.of(FoodPackageStatus.PACKED));
     validTransitions.put(FoodPackageStatus.PACKED, List.of(FoodPackageStatus.DISPATCHED));

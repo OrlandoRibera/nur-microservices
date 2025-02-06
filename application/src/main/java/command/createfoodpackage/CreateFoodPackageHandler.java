@@ -32,7 +32,7 @@ public class CreateFoodPackageHandler implements Command.Handler<CreateFoodPacka
       UUID.fromString(request.clientId),
       UUID.fromString(request.addressId),
       new ArrayList<>(),
-      FoodPackageStatus.EMPTY
+      FoodPackageStatus.NEW
     );
 
     foodPackageRepository.create(foodPackage);

@@ -39,7 +39,7 @@ public class CreateFoodInPackageHandler implements Command.Handler<CreateFoodInP
       FoodPackage foodPackage = foodPackageRepository.get(UUID.fromString(request.foodDTO.foodPackageId()));
       if (foodPackage == null) throw new CustomException("Food package not found");
 
-      if (foodPackage.getStatus() != FoodPackageStatus.EMPTY && foodPackage.getStatus() != FoodPackageStatus.COOKING) {
+      if (foodPackage.getStatus() != FoodPackageStatus.NEW && foodPackage.getStatus() != FoodPackageStatus.COOKING) {
         throw new CustomException("Cannot add more food because food package is in " + foodPackage.getStatus().toString() + " status");
       }
 
