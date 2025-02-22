@@ -14,7 +14,9 @@ class FoodPackageTest {
 
   @Test
   void nextStatusValidTransition() {
+
     FoodPackage foodPackage = new FoodPackage(
+      UUID.randomUUID(),
       UUID.randomUUID(),
       UUID.randomUUID(),
       UUID.randomUUID(),

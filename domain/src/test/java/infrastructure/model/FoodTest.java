@@ -10,6 +10,19 @@ import java.util.UUID;
 class FoodTest {
 
   @Test
+  void validCreationOfFood() throws BusinessRuleValidationException {
+    Food food = new Food("Panchito", FoodType.LUNCH, FoodStatus.COOKED, 300.0f, UUID.randomUUID());
+    assertEquals(food.getStatus(), FoodStatus.COOKED);
+  }
+
+  @Test
+  void validCreationOfFoodWithIdAndStatus() throws BusinessRuleValidationException {
+    UUID id = UUID.randomUUID();
+    Food food = new Food(id, "Panchito", FoodType.LUNCH, FoodStatus.COOKED, 300.0f, UUID.randomUUID());
+    assertEquals(food.getId(), id);
+  }
+
+  @Test
   void nextStatusValidTransition() throws BusinessRuleValidationException {
     // Arrange
     UUID foodId = UUID.randomUUID();
@@ -57,5 +70,87 @@ class FoodTest {
     });
 
     assertEquals("Invalid transition of Food from COOKED to COOKING", exception.getMessage());
+  }
+
+  @Test
+  void nextStatus() throws BusinessRuleValidationException {
+    // Arrange
+    Food food = new Food("Cuernito", FoodType.BREAKFAST, 300.0f, UUID.randomUUID());
+
+    // Act - Valid transition
+    food.nextStatus(FoodStatus.COOKING);
+
+    // Assert
+    assertEquals(FoodStatus.COOKING, food.getStatus());
+
+    // Act & Assert - Invalid transition
+    IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+      food.nextStatus(FoodStatus.PENDING);
+    });
+    assertEquals("Invalid transition of Food from COOKING to PENDING", exception.getMessage());
+  }
+
+  @Test
+  void getName() throws BusinessRuleValidationException {
+    // Arrange
+    String expectedName = "Burger King";
+    Food food = new Food(expectedName, FoodType.DINNER, 900f, UUID.randomUUID());
+
+    // Act
+    String result = food.getName();
+
+    // Assert
+    assertEquals(expectedName, result);
+  }
+
+  @Test
+  void getKcal() throws BusinessRuleValidationException {
+    // Arrange
+    float expectedKcal = 250.0f;
+    Food food = new Food("Ensalada Cesar", FoodType.BREAKFAST, expectedKcal, UUID.randomUUID());
+
+    // Act
+    float result = food.getKcal();
+
+    // Assert
+    assertEquals(expectedKcal, result);
+  }
+
+  @Test
+  void getStatus() throws BusinessRuleValidationException {
+    // Arrange
+    Food food = new Food("Fideo", FoodType.LUNCH, 350.0f, UUID.randomUUID());
+
+    // Act
+    FoodStatus result = food.getStatus();
+
+    // Assert
+    assertEquals(FoodStatus.PENDING, result);
+  }
+
+  @Test
+  void getType() throws BusinessRuleValidationException {
+    // Arrange
+    FoodType expectedType = FoodType.BREAKFAST;
+    Food food = new Food("Panqueque", expectedType, 500.0f, UUID.randomUUID());
+
+    // Act
+    FoodType result = food.getType();
+
+    // Assert
+    assertEquals(expectedType, result);
+  }
+
+  @Test
+  void getFoodPackageId() throws BusinessRuleValidationException {
+    // Arrange
+    UUID expectedPackageId = UUID.randomUUID();
+    Food food = new Food("Sushi", FoodType.DINNER, 200.0f, expectedPackageId);
+
+    // Act
+    UUID result = food.getFoodPackageId();
+
+    // Assert
+    assertEquals(expectedPackageId, result);
   }
 }
