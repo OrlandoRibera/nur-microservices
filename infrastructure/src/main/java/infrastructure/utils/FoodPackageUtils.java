@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Generated
 public class FoodPackageUtils {
-  public static FoodPackage jpaModelToFoodPackage(FoodPackageJpaModel jpaModel) throws BusinessRuleValidationException {
+  public static FoodPackage jpaModelToFoodPackage(FoodPackageJpaModel jpaModel) {
     List<Food> foods = jpaModel.getFoods().stream()
       .map(food -> {
         try {

@@ -14,20 +14,17 @@ import java.util.UUID;
 @Component
 public class GetFoodPackageHandler implements Command.Handler<GetFoodPackageQuery, FoodPackageDTO> {
 
-    @Autowired
-    private FoodPackageRepository foodPackageRepository;
+  @Autowired
+  private FoodPackageRepository foodPackageRepository;
 
-    public GetFoodPackageHandler() {
+  @Override
+  public FoodPackageDTO handle(GetFoodPackageQuery request) {
+    try {
+      FoodPackage foodPackage;
+      foodPackage = foodPackageRepository.findByRecipeIdAndClientId(UUID.fromString(request.recipeId), UUID.fromString(request.clientId));
+      return FoodPackageMapper.from(foodPackage);
+    } catch (BusinessRuleValidationException e) {
+      return null;
     }
-
-    @Override
-    public FoodPackageDTO handle(GetFoodPackageQuery request) {
-        try {
-            FoodPackage foodPackage;
-            foodPackage = foodPackageRepository.findByRecipeIdAndClientId(UUID.fromString(request.recipeId), UUID.fromString(request.clientId));
-            return FoodPackageMapper.from(foodPackage);
-        } catch (BusinessRuleValidationException e) {
-            return null;
-        }
-    }
+  }
 }

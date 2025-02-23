@@ -20,11 +20,8 @@ public class GetFoodPackagesHandler implements Command.Handler<GetFoodPackagesCo
   @Override
   public List<FoodPackageDTO> handle(GetFoodPackagesCommand getFoodPackagesCommand) {
     List<FoodPackage> foodPackages;
-    try {
-      foodPackages = foodPackageRepository.getAll();
-    } catch (BusinessRuleValidationException e) {
-      throw new RuntimeException(e);
-    }
+
+    foodPackages = foodPackageRepository.getAll();
 
     List<FoodPackageDTO> foodPackageDTOS = new ArrayList<>();
     for (FoodPackage foodPackage : foodPackages) {

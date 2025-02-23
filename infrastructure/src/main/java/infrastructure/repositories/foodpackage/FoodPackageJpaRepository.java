@@ -53,7 +53,7 @@ public class FoodPackageJpaRepository implements FoodPackageRepository {
   }
 
   @Override
-  public List<FoodPackage> getAll() throws BusinessRuleValidationException {
+  public List<FoodPackage> getAll() {
     List<FoodPackageJpaModel> foodPackageJpaModel = StreamSupport.stream(foodPackageCrudRepository.findAll().spliterator(), false).collect(Collectors.toList());
 
     List<FoodPackage> foodPackages = new ArrayList<>();
