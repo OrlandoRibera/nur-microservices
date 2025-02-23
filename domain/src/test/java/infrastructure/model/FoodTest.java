@@ -10,6 +10,23 @@ import java.util.UUID;
 class FoodTest {
 
   @Test
+  void invalidNameShouldThrowException() throws BusinessRuleValidationException {
+    assertThrows(BusinessRuleValidationException.class, () -> {
+      Food food = new Food(UUID.randomUUID(), null, FoodType.LUNCH, FoodStatus.PENDING, 500.0f, UUID.randomUUID());
+    });
+    assertThrows(BusinessRuleValidationException.class, () -> {
+      Food food = new Food(UUID.randomUUID(), "", FoodType.LUNCH, FoodStatus.PENDING, 500.0f, UUID.randomUUID());
+    });
+    assertThrows(BusinessRuleValidationException.class, () -> {
+      Food food = new Food(UUID.randomUUID(), null, FoodType.BREAKFAST, 500.0f, UUID.randomUUID());
+    });
+    assertThrows(BusinessRuleValidationException.class, () -> {
+      Food food = new Food(UUID.randomUUID(), "", FoodType.BREAKFAST, 500.0f, UUID.randomUUID());
+    });
+
+  }
+
+  @Test
   void validCreationOfFood() throws BusinessRuleValidationException {
     Food food = new Food("Panchito", FoodType.LUNCH, FoodStatus.COOKED, 300.0f, UUID.randomUUID());
     assertEquals(food.getStatus(), FoodStatus.COOKED);

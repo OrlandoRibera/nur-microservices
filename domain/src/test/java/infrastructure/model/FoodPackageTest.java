@@ -6,6 +6,7 @@ import event.FoodPackagePacked;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -99,5 +100,87 @@ class FoodPackageTest {
     );
 
     assertThrows(BusinessRuleValidationException.class, () -> foodPackage.createFood("Pizza", FoodType.BREAKFAST, -10));
+  }
+
+  @Test
+  void createFood() throws BusinessRuleValidationException {
+    UUID recipeId = UUID.randomUUID();
+    UUID clientId = UUID.randomUUID();
+    UUID addressId = UUID.randomUUID();
+    List<Food> foods = new ArrayList<>();
+    FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
+
+    foodPackage.createFood("Apple", FoodType.BREAKFAST, 95.0f);
+
+    assertEquals(1, foodPackage.getFoods().size());
+    assertEquals("Apple", foodPackage.getFoods().get(0).getName());
+    assertEquals(FoodType.BREAKFAST, foodPackage.getFoods().get(0).getType());
+    assertEquals(95.0f, foodPackage.getFoods().get(0).getKcal());
+  }
+
+  @Test
+  void nextStatus() {
+    UUID recipeId = UUID.randomUUID();
+    UUID clientId = UUID.randomUUID();
+    UUID addressId = UUID.randomUUID();
+    List<Food> foods = new ArrayList<>();
+    FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
+
+    foodPackage.nextStatus(FoodPackageStatus.COOKING);
+    assertEquals(FoodPackageStatus.COOKING, foodPackage.getStatus());
+
+    assertThrows(IllegalStateException.class, () -> {
+      foodPackage.nextStatus(FoodPackageStatus.PACKED);
+    });
+  }
+
+  @Test
+  void getRecipeId() {
+    UUID recipeId = UUID.randomUUID();
+    UUID clientId = UUID.randomUUID();
+    UUID addressId = UUID.randomUUID();
+    List<Food> foods = new ArrayList<>();
+    FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
+    assertEquals(recipeId, foodPackage.getRecipeId());
+  }
+
+  @Test
+  void getClientId() {
+    UUID recipeId = UUID.randomUUID();
+    UUID clientId = UUID.randomUUID();
+    UUID addressId = UUID.randomUUID();
+    List<Food> foods = new ArrayList<>();
+    FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
+    assertEquals(clientId, foodPackage.getClientId());
+  }
+
+  @Test
+  void getAddressId() {
+    UUID recipeId = UUID.randomUUID();
+    UUID clientId = UUID.randomUUID();
+    UUID addressId = UUID.randomUUID();
+    List<Food> foods = new ArrayList<>();
+    FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
+    assertEquals(addressId, foodPackage.getAddressId());
+  }
+
+  @Test
+  void getFoods() {
+    UUID recipeId = UUID.randomUUID();
+    UUID clientId = UUID.randomUUID();
+    UUID addressId = UUID.randomUUID();
+    List<Food> foods = new ArrayList<>();
+    FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
+    assertEquals(foods, foodPackage.getFoods());
+  }
+
+  @Test
+  void getStatus() {
+    UUID recipeId = UUID.randomUUID();
+    UUID clientId = UUID.randomUUID();
+    UUID addressId = UUID.randomUUID();
+    List<Food> foods = new ArrayList<>();
+    FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
+    assertEquals(FoodPackageStatus.NEW, foodPackage.getStatus());
   }
 }

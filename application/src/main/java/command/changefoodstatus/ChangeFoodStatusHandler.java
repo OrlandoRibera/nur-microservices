@@ -69,8 +69,4 @@ public class ChangeFoodStatusHandler implements Command.Handler<ChangeFoodStatus
       return null;
     }
   }
-
-  private void _checkAllFoodStatus() {
-
-  }
 }

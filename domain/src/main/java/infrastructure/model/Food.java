@@ -16,6 +16,9 @@ public class Food extends Entity {
   private FoodType type;
 
   public Food(UUID id, String name, FoodType type, float kcal, UUID foodPackageId) throws BusinessRuleValidationException {
+    if (name == null || name.isBlank()) {
+      throw new BusinessRuleValidationException("Food name cannot be null or empty");
+    }
     this.id = id;
     this.name = name;
     this.status = FoodStatus.PENDING;
@@ -25,15 +28,13 @@ public class Food extends Entity {
   }
 
   public Food(String name, FoodType type, float kcal, UUID foodPackageId) throws BusinessRuleValidationException {
-    this.id = UUID.randomUUID();
-    this.name = name;
-    this.status = FoodStatus.PENDING;
-    this.type = type;
-    this.kcal = new FoodKcalValue(kcal);
-    this.foodPackageId = foodPackageId;
+    this(UUID.randomUUID(), name, type, kcal, foodPackageId);
   }
 
   public Food(String name, FoodType type, FoodStatus foodStatus, float kcal, UUID foodPackageId) throws BusinessRuleValidationException {
+    if (name == null || name.isBlank()) {
+      throw new BusinessRuleValidationException("Food name cannot be null or empty");
+    }
     this.id = UUID.randomUUID();
     this.name = name;
     this.status = foodStatus;
@@ -43,6 +44,9 @@ public class Food extends Entity {
   }
 
   public Food(UUID id, String name, FoodType type, FoodStatus foodStatus, float kcal, UUID foodPackageId) throws BusinessRuleValidationException {
+    if (name == null || name.isBlank()) {
+      throw new BusinessRuleValidationException("Food name cannot be null or empty");
+    }
     this.id = id;
     this.name = name;
     this.status = foodStatus;
@@ -51,9 +55,9 @@ public class Food extends Entity {
     this.foodPackageId = foodPackageId;
   }
 
-  public void nextStatus(FoodStatus newStatus) {
+  public void nextStatus(FoodStatus newStatus) throws BusinessRuleValidationException {
     if (!isValidTransition(this.status, newStatus)) {
-      throw new IllegalStateException(
+      throw new BusinessRuleValidationException(
         String.format("Invalid transition of Food from %s to %s", this.status, newStatus));
     }
     this.status = newStatus;
