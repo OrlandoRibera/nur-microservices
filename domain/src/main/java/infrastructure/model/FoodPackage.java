@@ -38,9 +38,9 @@ public class FoodPackage extends AggregateRoot {
     this.foods.add(new Food(name, foodType, kcal, this.id));
   }
 
-  public void nextStatus(FoodPackageStatus newStatus) {
+  public void nextStatus(FoodPackageStatus newStatus) throws BusinessRuleValidationException {
     if (!isValidTransition(this.status, newStatus)) {
-      throw new IllegalStateException(String.format("Invalid transition of Food Package from %s to %s", this.status, newStatus));
+      throw new BusinessRuleValidationException(String.format("Invalid transition of Food Package from %s to %s", this.status, newStatus));
     }
 
     this.status = newStatus;

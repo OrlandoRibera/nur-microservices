@@ -1,5 +1,6 @@
 package infrastructure.model;
 
+import core.BusinessRule;
 import core.BusinessRuleValidationException;
 import event.FoodPackageDispatched;
 import event.FoodPackagePacked;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class FoodPackageTest {
 
   @Test
-  void nextStatusValidTransition() {
+  void nextStatusValidTransition() throws BusinessRuleValidationException {
 
     FoodPackage foodPackage = new FoodPackage(
       UUID.randomUUID(),
@@ -40,11 +41,11 @@ class FoodPackageTest {
       FoodPackageStatus.NEW
     );
 
-    assertThrows(IllegalStateException.class, () -> foodPackage.nextStatus(FoodPackageStatus.DISPATCHED));
+    assertThrows(BusinessRuleValidationException.class, () -> foodPackage.nextStatus(FoodPackageStatus.DISPATCHED));
   }
 
   @Test
-  void nextStatusTriggersPackedEvent() {
+  void nextStatusTriggersPackedEvent() throws BusinessRuleValidationException {
     FoodPackage foodPackage = new FoodPackage(
       UUID.randomUUID(),
       UUID.randomUUID(),
@@ -59,7 +60,7 @@ class FoodPackageTest {
   }
 
   @Test
-  void nextStatusTriggersDispatchedEvent() {
+  void nextStatusTriggersDispatchedEvent() throws BusinessRuleValidationException {
     FoodPackage foodPackage = new FoodPackage(
       UUID.randomUUID(),
       UUID.randomUUID(),
@@ -119,7 +120,7 @@ class FoodPackageTest {
   }
 
   @Test
-  void nextStatus() {
+  void nextStatus() throws BusinessRuleValidationException {
     UUID recipeId = UUID.randomUUID();
     UUID clientId = UUID.randomUUID();
     UUID addressId = UUID.randomUUID();
@@ -129,7 +130,7 @@ class FoodPackageTest {
     foodPackage.nextStatus(FoodPackageStatus.COOKING);
     assertEquals(FoodPackageStatus.COOKING, foodPackage.getStatus());
 
-    assertThrows(IllegalStateException.class, () -> {
+    assertThrows(BusinessRuleValidationException.class, () -> {
       foodPackage.nextStatus(FoodPackageStatus.PACKED);
     });
   }
