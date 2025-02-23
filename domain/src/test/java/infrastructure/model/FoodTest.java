@@ -10,7 +10,7 @@ import java.util.UUID;
 class FoodTest {
 
   @Test
-  void invalidNameShouldThrowException() throws BusinessRuleValidationException {
+  void invalidNameShouldThrowException() {
     assertThrows(BusinessRuleValidationException.class, () -> {
       Food food = new Food(UUID.randomUUID(), null, FoodType.LUNCH, FoodStatus.PENDING, 500.0f, UUID.randomUUID());
     });
@@ -57,7 +57,7 @@ class FoodTest {
     UUID foodId = UUID.randomUUID();
     Food food = new Food(foodId, "Pizza", FoodType.BREAKFAST, 500.0f, UUID.randomUUID());
 
-    IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+    BusinessRuleValidationException exception = assertThrows(BusinessRuleValidationException.class, () -> {
       food.nextStatus(FoodStatus.COOKED);
     });
 
@@ -82,7 +82,7 @@ class FoodTest {
     food.nextStatus(FoodStatus.COOKING);
     food.nextStatus(FoodStatus.COOKED);
 
-    IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+    BusinessRuleValidationException exception = assertThrows(BusinessRuleValidationException.class, () -> {
       food.nextStatus(FoodStatus.COOKING);
     });
 
@@ -101,7 +101,7 @@ class FoodTest {
     assertEquals(FoodStatus.COOKING, food.getStatus());
 
     // Act & Assert - Invalid transition
-    IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+    BusinessRuleValidationException exception = assertThrows(BusinessRuleValidationException.class, () -> {
       food.nextStatus(FoodStatus.PENDING);
     });
     assertEquals("Invalid transition of Food from COOKING to PENDING", exception.getMessage());
