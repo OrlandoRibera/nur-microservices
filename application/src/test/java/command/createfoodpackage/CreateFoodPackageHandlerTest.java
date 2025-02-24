@@ -1,12 +1,9 @@
 package command.createfoodpackage;
 
-import dto.FoodDTO;
 import dto.FoodPackageDTO;
-import factories.foodpackage.FoodPackageFactory;
 import infrastructure.model.FoodPackage;
 import infrastructure.model.FoodPackageStatus;
 import infrastructure.repositories.FoodPackageRepository;
-import mappers.FoodPackageMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,7 +16,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 
 
 class CreateFoodPackageHandlerTest {

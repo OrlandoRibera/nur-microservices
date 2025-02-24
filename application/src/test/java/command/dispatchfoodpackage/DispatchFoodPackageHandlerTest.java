@@ -43,6 +43,9 @@ class DispatchFoodPackageHandlerTest {
 
     FoodPackageDTO result = handler.handle(command);
 
+    assertEquals(result.addressId(), foodPackage.getAddressId().toString());
+    assertEquals(result.clientId(), foodPackage.getClientId().toString());
+    assertEquals(result.recipeId(), foodPackage.getRecipeId().toString());
     assertNotNull(result);
     assertEquals(result.getClass(), FoodPackageDTO.class);
     assertEquals(result.status(), FoodPackageStatus.DISPATCHED);

@@ -1,14 +1,16 @@
 package infrastructure.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @Table(name = "foods")
 public class FoodJpaModel {
   @Id
