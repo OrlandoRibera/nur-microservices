@@ -1,0 +1,9 @@
+target/
+*.iml
+.idea/
+.mvn/
+.git/
+.gitignore
+.dockerignore
+README.md
+node_modules/
