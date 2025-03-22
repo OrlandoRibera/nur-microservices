@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  catering-app:
+    image: tuniol/catering-app:latest
+    container_name: catering-container
+    ports:
+      - "8080:8080"
+    volumes:
+      - h2-data:/opt/h2-data
+    env_file:
+      - .env
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 1s
+
+volumes:
+  h2-data:
