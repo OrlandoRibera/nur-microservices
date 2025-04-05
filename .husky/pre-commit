@@ -1,1 +1,2 @@
+./mvnw verify
 npx --no -- commitlint --edit "$1"

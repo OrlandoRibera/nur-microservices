@@ -1,3 +1,4 @@
 package core;
 
-public abstract class AggregateRoot extends Entity {}
+public abstract class AggregateRoot extends Entity {
+}
