@@ -1,0 +1,26 @@
+{
+  "name": "catering",
+  "version": "1.0.0",
+  "description": "Este servicio es encargado de recibir las recetas y cocinar la comida, cocinar, empaquetar y despachar cada una de las\r comidas, actualizar los estados de las comidas y del paquete.",
+  "main": "index.js",
+  "scripts": {
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OrlandoRibera/nur-microservices.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/OrlandoRibera/nur-microservices/issues"
+  },
+  "homepage": "https://github.com/OrlandoRibera/nur-microservices#readme",
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.0",
+    "@commitlint/config-conventional": "^19.8.0",
+    "husky": "^9.1.7"
+  }
+}
