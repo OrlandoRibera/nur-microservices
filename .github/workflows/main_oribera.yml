@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: java-app
-          path: presentation/target/*.jar
+          path: '${{ github.workspace }}/target/*.jar'
 
   deploy:
     runs-on: ubuntu-latest
@@ -42,19 +42,19 @@ jobs:
     permissions:
       id-token: write #This is required for requesting the JWT
       contents: read #This is required for actions/checkout
-
+  
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v4
         with:
           name: java-app
-
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_97FD87F0D7B049DFB4577052BB73B900 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A62FF9E0CDB64463B3D35BDDB38D4142 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_229E845F7E7C42E29F89C0C420F052BE }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_80A66F9680E14ED284D30B2D5BE3DE13 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C1CA474A220F4593BD7ABD3A64429072 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_69CAB4DF82094B49A5BE41AB2A408CD4 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -63,4 +63,4 @@ jobs:
           app-name: 'oribera'
           slot-name: 'Production'
           package: '*.jar'
-
+          
