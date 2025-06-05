@@ -11,58 +11,64 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import publisher.DomainEventPublisher;
 
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 class PackFoodPackageHandlerTest {
-  @Mock
-  private FoodPackageRepository foodPackageRepository;
+	@Mock
+	private FoodPackageRepository foodPackageRepository;
 
-  @InjectMocks
-  private PackFoodPackageHandler handler;
+	@Mock
+	private DomainEventPublisher publisher;
 
-  @BeforeEach
-  void setUp() {
-    MockitoAnnotations.openMocks(this);
-  }
+	@InjectMocks
+	private PackFoodPackageHandler handler;
 
-  @Test
-  void shouldThordFoodPackageNotFound() throws BusinessRuleValidationException {
-    UUID foodPackageId = UUID.randomUUID();
-    PackFoodPackageCommand command = new PackFoodPackageCommand(foodPackageId.toString());
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-    when(foodPackageRepository.get(foodPackageId)).thenReturn(null);
+	@Test
+	void shouldThordFoodPackageNotFound() throws BusinessRuleValidationException {
+		UUID foodPackageId = UUID.randomUUID();
+		PackFoodPackageCommand command = new PackFoodPackageCommand(foodPackageId.toString());
 
-    CustomException exception = assertThrows(CustomException.class, () -> handler.handle(command));
-    assertEquals("Food package not found", exception.getMessage());
-  }
+		when(foodPackageRepository.get(foodPackageId)).thenReturn(null);
 
-  @Test
-  void shouldThrowExceptionInvalidStatus() throws BusinessRuleValidationException {
-    String foodPackageId = UUID.randomUUID().toString();
-    PackFoodPackageCommand command = new PackFoodPackageCommand(foodPackageId);
-    FoodPackage foodPackage = new FoodPackage(UUID.fromString(foodPackageId), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.NEW);
-    when(foodPackageRepository.get(UUID.fromString(foodPackageId))).thenReturn(foodPackage);
+		CustomException exception = assertThrows(CustomException.class, () -> handler.handle(command));
+		assertEquals("Food package not found", exception.getMessage());
+	}
 
-    // FoodDTO should be null
-    assertNull(handler.handle(command));
-  }
+	@Test
+	void shouldThrowExceptionInvalidStatus() throws BusinessRuleValidationException {
+		String foodPackageId = UUID.randomUUID().toString();
+		PackFoodPackageCommand command = new PackFoodPackageCommand(foodPackageId);
+		FoodPackage foodPackage = new FoodPackage(UUID.fromString(foodPackageId), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.NEW);
+		when(foodPackageRepository.get(UUID.fromString(foodPackageId))).thenReturn(foodPackage);
+		doNothing().when(publisher).publish(foodPackage.getDomainEvents());
 
-  @Test
-  void shouldPackFoodPackageSuccessfully() throws BusinessRuleValidationException {
-    String foodPackageId = UUID.randomUUID().toString();
-    PackFoodPackageCommand command = new PackFoodPackageCommand(foodPackageId);
-    FoodPackage foodPackage = new FoodPackage(UUID.fromString(foodPackageId), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.COOKED);
-    when(foodPackageRepository.get(UUID.fromString(foodPackageId))).thenReturn(foodPackage);
+		// FoodDTO should be null
+		assertNull(handler.handle(command));
+	}
 
-    FoodPackageDTO result = handler.handle(command);
+	@Test
+	void shouldPackFoodPackageSuccessfully() throws BusinessRuleValidationException {
+		String foodPackageId = UUID.randomUUID().toString();
+		PackFoodPackageCommand command = new PackFoodPackageCommand(foodPackageId);
+		FoodPackage foodPackage = new FoodPackage(UUID.fromString(foodPackageId), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.COOKED);
+		when(foodPackageRepository.get(UUID.fromString(foodPackageId))).thenReturn(foodPackage);
 
-    assertNotNull(result);
-    assertEquals(result.getClass(), FoodPackageDTO.class);
-    assertEquals(result.status(), FoodPackageStatus.PACKED);
-  }
+		FoodPackageDTO result = handler.handle(command);
+
+		assertNotNull(result);
+		assertEquals(result.getClass(), FoodPackageDTO.class);
+		assertEquals(result.status(), FoodPackageStatus.PACKED);
+	}
 }
