@@ -2,6 +2,7 @@ package command.packfoodpackage;
 
 import an.awesome.pipelinr.Command;
 import core.BusinessRuleValidationException;
+import core.DomainEvent;
 import dto.FoodPackageDTO;
 import infrastructure.model.CustomException;
 import infrastructure.model.FoodPackage;
@@ -10,26 +11,34 @@ import infrastructure.repositories.FoodPackageRepository;
 import mappers.FoodPackageMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import publisher.DomainEventPublisher;
 
+import java.util.List;
 import java.util.UUID;
 
 @Component
 public class PackFoodPackageHandler implements Command.Handler<PackFoodPackageCommand, FoodPackageDTO> {
-  @Autowired
-  private FoodPackageRepository foodPackageRepository;
+	@Autowired
+	private FoodPackageRepository foodPackageRepository;
 
-  @Override
-  public FoodPackageDTO handle(PackFoodPackageCommand request) {
-    try {
-      FoodPackage foodPackage = foodPackageRepository.get(UUID.fromString(request.foodPackageId));
-      if (foodPackage == null) throw new CustomException("Food package not found");
+	@Autowired
+	private DomainEventPublisher publisher;
 
-      foodPackage.nextStatus(FoodPackageStatus.PACKED);
+	@Override
+	public FoodPackageDTO handle(PackFoodPackageCommand request) {
+		try {
+			FoodPackage foodPackage = foodPackageRepository.get(UUID.fromString(request.foodPackageId));
+			if (foodPackage == null) throw new CustomException("Food package not found");
 
-      foodPackageRepository.update(foodPackage);
-      return FoodPackageMapper.from(foodPackage);
-    } catch (BusinessRuleValidationException e) {
-      return null;
-    }
-  }
+			foodPackage.nextStatus(FoodPackageStatus.PACKED);
+
+			List<DomainEvent> events = foodPackage.getDomainEvents();
+			publisher.publish(events);
+
+			foodPackageRepository.update(foodPackage);
+			return FoodPackageMapper.from(foodPackage);
+		} catch (BusinessRuleValidationException e) {
+			return null;
+		}
+	}
 }

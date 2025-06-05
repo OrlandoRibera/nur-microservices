@@ -34,3 +34,6 @@ build/
 
 package-lock.json
 node_modules
+/presentation/.azure/.gitignore
+/presentation/.azure/default/connections.xml
+/presentation/.azure/profiles.xml

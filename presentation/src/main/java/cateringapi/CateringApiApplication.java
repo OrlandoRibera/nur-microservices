@@ -19,35 +19,35 @@ import infrastructure.repositories.food.FoodJpaRepository;
 import infrastructure.repositories.foodpackage.FoodPackageJpaRepository;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"controllers", "infrastructure.repositories", "command", "query", "event", "core"})
+@ComponentScan(basePackages = {"controllers", "infrastructure.repositories", "infrastructure.publisher", "command", "query", "event", "core"})
 @EntityScan("infrastructure.model")
 @EnableJpaRepositories(basePackages = {"infrastructure.repositories"})
 @EnableTransactionManagement
 @Generated
 public class CateringApiApplication {
-  public static void main(String[] args) {
-    SpringApplication.run(CateringApiApplication.class, args);
-  }
+	public static void main(String[] args) {
+		SpringApplication.run(CateringApiApplication.class, args);
+	}
 
-  @Bean(name = "foodRepository")
-  public FoodRepository foodRepository() {
-    return new FoodJpaRepository();
-  }
+	@Bean(name = "foodRepository")
+	public FoodRepository foodRepository() {
+		return new FoodJpaRepository();
+	}
 
-  @Bean(name = "foodPackageRepository")
-  public FoodPackageRepository foodPackageRepository() {
-    return new FoodPackageJpaRepository();
-  }
+	@Bean(name = "foodPackageRepository")
+	public FoodPackageRepository foodPackageRepository() {
+		return new FoodPackageJpaRepository();
+	}
 
-  @Bean
-  Pipeline pipeline(
-    ObjectProvider<Command.Handler> commandHandlers,
-    ObjectProvider<Notification.Handler> notificationHandlers,
-    ObjectProvider<Command.Middleware> middlewares
-  ) {
-    return new Pipelinr()
-      .with(commandHandlers::stream)
-      .with(notificationHandlers::stream)
-      .with(middlewares::orderedStream);
-  }
+	@Bean
+	Pipeline pipeline(
+		ObjectProvider<Command.Handler> commandHandlers,
+		ObjectProvider<Notification.Handler> notificationHandlers,
+		ObjectProvider<Command.Middleware> middlewares
+	) {
+		return new Pipelinr()
+			.with(commandHandlers::stream)
+			.with(notificationHandlers::stream)
+			.with(middlewares::orderedStream);
+	}
 }
