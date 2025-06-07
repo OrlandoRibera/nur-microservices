@@ -28,7 +28,7 @@ class FoodPackageEventsTest {
 		FoodPackage foodPackage = new FoodPackage(foodPackageId, foodPackageId, foodPackageId, foodPackageId, foodList, status);
 
 		// Act
-		FoodPackageDispatched event = new FoodPackageDispatched(foodPackage);
+		FoodPackageStatusEvent event = new FoodPackageStatusEvent(foodPackage);
 
 		// Assert
 		assertEquals("FOOD_PACKAGE_DISPATCHED", event.getEventType());
@@ -56,7 +56,7 @@ class FoodPackageEventsTest {
 		FoodPackage foodPackage = new FoodPackage(foodPackageId, foodPackageId, foodPackageId, foodPackageId, foodList, status);
 
 		// Act
-		FoodPackagePacked event = new FoodPackagePacked(foodPackage);
+		FoodPackageStatusEvent event = new FoodPackageStatusEvent(foodPackage);
 
 		// Assert
 		assertEquals("FOOD_PACKAGE_PACKED", event.getEventType());
