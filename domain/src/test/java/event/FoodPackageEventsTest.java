@@ -1,11 +1,11 @@
 package event;
 
 import core.BusinessRuleValidationException;
-import core.DomainEvent;
 import infrastructure.model.Food;
 import infrastructure.model.FoodPackage;
 import infrastructure.model.FoodPackageStatus;
 import infrastructure.model.FoodType;
+import infrastructure.model.event.LightFoodPackage;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

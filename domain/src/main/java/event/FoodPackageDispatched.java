@@ -2,6 +2,7 @@ package event;
 
 import core.DomainEvent;
 import infrastructure.model.FoodPackage;
+import infrastructure.model.event.LightFoodPackage;
 
 public class FoodPackageDispatched extends DomainEvent<LightFoodPackage> {
 

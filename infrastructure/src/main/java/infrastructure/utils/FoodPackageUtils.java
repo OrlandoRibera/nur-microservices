@@ -9,31 +9,34 @@ import java.util.Objects;
 
 @Generated
 public class FoodPackageUtils {
-  public static FoodPackage jpaModelToFoodPackage(FoodPackageJpaModel jpaModel) {
-    List<Food> foods = jpaModel.getFoods().stream()
-      .map(food -> {
-        try {
-          return FoodUtils.jpaToFood(food);
-        } catch (Exception e) {
-          return null;
-        }
-      })
-      .filter(Objects::nonNull)
-      .toList();
+	private FoodPackageUtils() {
+	}
 
-    return new FoodPackage(jpaModel.getId(), jpaModel.getRecipeId(), jpaModel.getClientId(), jpaModel.getAddressId(), foods, FoodPackageStatus.valueOf(jpaModel.getStatus()));
-  }
+	public static FoodPackage jpaModelToFoodPackage(FoodPackageJpaModel jpaModel) {
+		List<Food> foods = jpaModel.getFoods().stream()
+			.map(food -> {
+				try {
+					return FoodUtils.jpaToFood(food);
+				} catch (Exception e) {
+					return null;
+				}
+			})
+			.filter(Objects::nonNull)
+			.toList();
 
-  public static FoodPackageJpaModel foodPackageToJpaEntity(
-    FoodPackage foodPackage,
-    List<FoodJpaModel> foods
-  ) {
-    FoodPackageJpaModel model = new FoodPackageJpaModel();
-    model.setFoods(foods);
-    model.setId(foodPackage.getId());
-    model.setRecipeId(foodPackage.getRecipeId());
-    model.setClientId(foodPackage.getClientId());
-    model.setAddressId(foodPackage.getAddressId());
-    return model;
-  }
+		return new FoodPackage(jpaModel.getId(), jpaModel.getRecipeId(), jpaModel.getClientId(), jpaModel.getAddressId(), foods, FoodPackageStatus.valueOf(jpaModel.getStatus()));
+	}
+
+	public static FoodPackageJpaModel foodPackageToJpaEntity(
+		FoodPackage foodPackage,
+		List<FoodJpaModel> foods
+	) {
+		FoodPackageJpaModel model = new FoodPackageJpaModel();
+		model.setFoods(foods);
+		model.setId(foodPackage.getId());
+		model.setRecipeId(foodPackage.getRecipeId());
+		model.setClientId(foodPackage.getClientId());
+		model.setAddressId(foodPackage.getAddressId());
+		return model;
+	}
 }

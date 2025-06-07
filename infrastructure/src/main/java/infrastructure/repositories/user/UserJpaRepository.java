@@ -1,12 +1,12 @@
 package infrastructure.repositories.user;
 
-import event.UserCreatedEventBody;
 import infrastructure.model.CustomException;
 import infrastructure.model.User;
+import infrastructure.model.UserJpaModel;
 import infrastructure.repositories.UserRepository;
+import infrastructure.utils.UserUtils;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,44 +20,55 @@ public class UserJpaRepository implements UserRepository {
 
 
 	@Override
-	public UserCreatedEventBody get(UUID id) {
+	public User get(UUID userId) {
 
-		User user = userCrudRepository.findById(id).orElse(null);
-		if (user == null) throw new CustomException("User not found");
+		UserJpaModel userJpaModel = userCrudRepository.findById(userId.toString()).orElse(null);
+		if (userJpaModel == null) throw new CustomException("User not found");
 
-		return new UserCreatedEventBody(user.getId(), user.getUsername(), user.getEmail(), user.getFullName(), user.getCreatedAt().toString());
+		return UserUtils.jpaModelToUser(userJpaModel);
 	}
 
 	@Override
-	public UUID create(UserCreatedEventBody userDto) {
-		User user = new User(
-			userDto.getId(),
-			userDto.getUsername(),
-			userDto.getEmail(),
-			userDto.getFullName(),
-			LocalDate.parse(userDto.getCreatedAt()),
-			null
+	public UUID create(User user) {
+		UserJpaModel userJpaModel = new UserJpaModel(
+			user.getId(),
+			user.getUsername(),
+			user.getEmail(),
+			user.getFullName(),
+			user.getCreatedAt(),
+			user.getAddress()
 		);
 
-		userCrudRepository.save(user);
-		return UUID.fromString(user.getId());
+		userCrudRepository.save(userJpaModel);
+		return UUID.fromString(userJpaModel.getId());
 	}
 
 	@Override
-	public UUID update(UserCreatedEventBody userDto) {
-		Optional<User> existing = userCrudRepository.findById(UUID.fromString(userDto.getId()));
+	public UUID update(User user) {
+		Optional<UserJpaModel> existing = userCrudRepository.findById(user.getId());
 
 		if (existing.isEmpty()) {
 			throw new CustomException("User not found");
 		}
 
-		User user = existing.get();
-		user.setUsername(userDto.getUsername());
-		user.setEmail(userDto.getEmail());
-		user.setFullName(userDto.getFullName());
-		user.setCreatedAt(LocalDate.parse(userDto.getCreatedAt()));
+		UserJpaModel userJpaModel = existing.get();
+		userJpaModel.setUsername(user.getUsername());
+		userJpaModel.setEmail(user.getEmail());
+		userJpaModel.setFullName(user.getFullName());
+		userJpaModel.setCreatedAt(user.getCreatedAt());
+		userJpaModel.setAddress(user.getAddress());
 
-		userCrudRepository.save(user);
-		return UUID.fromString(user.getId());
+		userCrudRepository.save(userJpaModel);
+		return UUID.fromString(userJpaModel.getId());
+	}
+
+	@Override
+	public User updateAddress(UUID userId, String address) {
+		UserJpaModel userJpa = userCrudRepository.findById(userId.toString()).orElse(null);
+		if (userJpa == null) throw new CustomException("User not found");
+
+		userJpa.setAddress(address);
+		userCrudRepository.save(userJpa);
+		return UserUtils.jpaModelToUser(userJpa);
 	}
 }
