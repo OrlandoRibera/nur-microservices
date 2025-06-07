@@ -1,4 +1,4 @@
-package event;
+package infrastructure.model.event;
 
 import infrastructure.model.Food;
 import infrastructure.model.FoodPackage;
@@ -10,7 +10,7 @@ public class LightFoodPackage {
 	private final String status;
 	private final List<String> foods;
 
-	protected LightFoodPackage(FoodPackage fp) {
+	public LightFoodPackage(FoodPackage fp) {
 		this.id = fp.getId().toString();
 		this.status = fp.getStatus().name();
 		this.foods = fp.getFoods().stream().map(Food::getName).toList();

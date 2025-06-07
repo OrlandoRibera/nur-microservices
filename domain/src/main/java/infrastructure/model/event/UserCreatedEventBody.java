@@ -1,4 +1,4 @@
-package event;
+package infrastructure.model.event;
 
 public class UserCreatedEventBody {
 	private String id;
@@ -6,16 +6,18 @@ public class UserCreatedEventBody {
 	private String email;
 	private String fullName;
 	private String createdAt;
+	private String address;
 
 	public UserCreatedEventBody() {
 	}
 
-	public UserCreatedEventBody(String id, String username, String email, String fullName, String createdAt) {
+	public UserCreatedEventBody(String id, String username, String email, String fullName, String createdAt, String address) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.fullName = fullName;
 		this.createdAt = createdAt;
+		this.address = address;
 	}
 
 	public String getId() {
@@ -56,5 +58,13 @@ public class UserCreatedEventBody {
 
 	public void setCreatedAt(String createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }

@@ -1,13 +1,16 @@
 package infrastructure.repositories;
 
-import event.UserCreatedEventBody;
+import infrastructure.model.User;
+import infrastructure.model.event.UserCreatedEventBody;
 
 import java.util.UUID;
 
 public interface UserRepository {
-	UserCreatedEventBody get(UUID id);
+	User get(UUID id);
 
-	UUID create(UserCreatedEventBody user);
+	UUID create(User user);
 
-	UUID update(UserCreatedEventBody user);
+	UUID update(User user);
+
+	User updateAddress(UUID userId, String address);
 }

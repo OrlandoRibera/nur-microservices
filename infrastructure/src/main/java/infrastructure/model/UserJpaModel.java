@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @Table(name = "users")
-public class User {
+public class UserJpaModel {
 	@Id
 	private String id;
 	private String fullName;
