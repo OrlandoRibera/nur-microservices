@@ -7,6 +7,8 @@ import an.awesome.pipelinr.Pipelinr;
 import annotations.Generated;
 import infrastructure.repositories.FoodPackageRepository;
 import infrastructure.repositories.FoodRepository;
+import infrastructure.repositories.food.FoodJpaRepository;
+import infrastructure.repositories.foodpackage.FoodPackageJpaRepository;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -15,11 +17,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import infrastructure.repositories.food.FoodJpaRepository;
-import infrastructure.repositories.foodpackage.FoodPackageJpaRepository;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"controllers", "infrastructure.repositories", "infrastructure.publisher", "command", "query", "event", "core"})
+@ComponentScan(basePackages = {"controllers", "infrastructure.repositories", "infrastructure.eventhub", "command", "query", "event", "core"})
 @EntityScan("infrastructure.model")
 @EnableJpaRepositories(basePackages = {"infrastructure.repositories"})
 @EnableTransactionManagement

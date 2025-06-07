@@ -6,34 +6,34 @@ import java.util.UUID;
 
 public abstract class Entity {
 
-  public UUID id;
-  public final List<DomainEvent> domainEvents;
+	public UUID id;
+	public final List<DomainEvent> domainEvents;
 
-  protected Entity() {
-    id = UUID.randomUUID();
-    domainEvents = new ArrayList<>();
-  }
+	protected Entity() {
+		id = UUID.randomUUID();
+		domainEvents = new ArrayList<>();
+	}
 
-  public void addDomainEvent(DomainEvent event) {
-    domainEvents.add(event);
-  }
+	public void addDomainEvent(DomainEvent event) {
+		domainEvents.add(event);
+	}
 
-  public void clearDomainEvents() {
-    domainEvents.clear();
-  }
+	public void clearDomainEvents() {
+		domainEvents.clear();
+	}
 
-  protected void checkRule(BusinessRule rule)
-    throws BusinessRuleValidationException {
-    if (rule == null) throw new IllegalArgumentException("Rule cannot be null");
+	protected void checkRule(BusinessRule rule)
+		throws BusinessRuleValidationException {
+		if (rule == null) throw new IllegalArgumentException("Rule cannot be null");
 
-    if (!rule.isValid()) throw new BusinessRuleValidationException(rule);
-  }
+		if (!rule.isValid()) throw new BusinessRuleValidationException(rule);
+	}
 
-  public UUID getId() {
-    return id;
-  }
+	public UUID getId() {
+		return id;
+	}
 
-  public List<DomainEvent> getDomainEvents() {
-    return new ArrayList<>(domainEvents);
-  }
+	public List<DomainEvent> getDomainEvents() {
+		return new ArrayList<>(domainEvents);
+	}
 }

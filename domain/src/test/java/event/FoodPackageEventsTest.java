@@ -1,6 +1,7 @@
 package event;
 
 import core.BusinessRuleValidationException;
+import core.DomainEvent;
 import infrastructure.model.Food;
 import infrastructure.model.FoodPackage;
 import infrastructure.model.FoodPackageStatus;
@@ -35,7 +36,7 @@ class FoodPackageEventsTest {
 		assertEquals("catering-service", event.getSource());
 		assertNotNull(event.getTimestamp());
 
-		DispatchedFoodPackage body = event.getBody();
+		LightFoodPackage body = event.getBody();
 		assertNotNull(body);
 		assertEquals(foodPackageId.toString(), body.getId());
 		assertEquals("DISPATCHED", body.getStatus());
@@ -63,7 +64,7 @@ class FoodPackageEventsTest {
 		assertEquals("catering-service", event.getSource());
 		assertNotNull(event.getTimestamp());
 
-		PackedFoodPackage body = event.getBody();
+		LightFoodPackage body = event.getBody();
 		assertNotNull(body);
 		assertEquals(foodPackageId.toString(), body.getId());
 		assertEquals("PACKED", body.getStatus());
