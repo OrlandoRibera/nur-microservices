@@ -1,7 +1,6 @@
 package infrastructure.repositories;
 
 import infrastructure.model.User;
-import infrastructure.model.event.UserCreatedEventBody;
 
 import java.util.UUID;
 

@@ -29,16 +29,6 @@ public class CateringApiApplication {
 		SpringApplication.run(CateringApiApplication.class, args);
 	}
 
-	@Bean(name = "foodRepository")
-	public FoodRepository foodRepository() {
-		return new FoodJpaRepository();
-	}
-
-	@Bean(name = "foodPackageRepository")
-	public FoodPackageRepository foodPackageRepository() {
-		return new FoodPackageJpaRepository();
-	}
-
 	@Bean
 	Pipeline pipeline(
 		ObjectProvider<Command.Handler> commandHandlers,

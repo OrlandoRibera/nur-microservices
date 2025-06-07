@@ -10,90 +10,160 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.BusinessRuleValidationException;
 import core.DomainEvent;
+import infrastructure.model.Recipe;
 import infrastructure.model.User;
 import infrastructure.model.event.AddressUpdatedEventBody;
+import infrastructure.model.event.DeliveryDateUpdatedEventBody;
+import infrastructure.model.event.RecipeCreatedEventBody;
 import infrastructure.model.event.UserCreatedEventBody;
+import infrastructure.repositories.recipe.RecipeJpaRepository;
 import infrastructure.repositories.user.UserJpaRepository;
-import infrastructure.utils.UserUtils;
 import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.UUID;
-
+import java.util.function.Consumer;
 
 @Component
 public class AzureEventHubListener {
-	private final EventHubConsumerAsyncClient consumer;
-	private final ObjectMapper objectMapper = new ObjectMapper();
+	private static final Logger logger = LoggerFactory.getLogger(AzureEventHubListener.class);
 
-	@Autowired
-	private UserJpaRepository userRepository;
+	private final EventHubConsumerAsyncClient consumer;
+	private final ObjectMapper objectMapper;
+	private final UserJpaRepository userRepository;
+	private final RecipeJpaRepository recipeRepository;
+	private final Map<String, Consumer<JsonNode>> eventHandlers;
 
 	public AzureEventHubListener(
 		@Value("${azure.eventhub.connection-string}") String connectionString,
-		@Value("${azure.eventhub.hub-name}") String eventHubName
+		@Value("${azure.eventhub.hub-name}") String eventHubName,
+		UserJpaRepository userRepository,
+		RecipeJpaRepository recipeRepository
 	) {
 		this.consumer = new EventHubClientBuilder()
 			.connectionString(connectionString, eventHubName)
 			.consumerGroup(EventHubClientBuilder.DEFAULT_CONSUMER_GROUP_NAME)
 			.buildAsyncConsumerClient();
+
+		this.objectMapper = new ObjectMapper()
+			.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+		this.userRepository = userRepository;
+		this.recipeRepository = recipeRepository;
+
+		this.eventHandlers = Map.of(
+			"USER_CREATED", this::handleUserCreatedEvent,
+			"USER_ADDRESS_UPDATE", this::handleAddressUpdatedEvent,
+			"DELIVERY_DATE_UPDATE", this::handleDeliveryDateUpdateEvent,
+			"CONTRACT_DISPATCHED_FOR_RECIPE", this::handleRecipeEvent
+		);
 	}
 
 	@PostConstruct
 	public void startListening() {
-		objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-		consumer.getPartitionIds().subscribe(partitionId -> {
+		consumer.getPartitionIds().subscribe(partitionId ->
 			consumer.receiveFromPartition(partitionId, EventPosition.latest())
-				.subscribe(this::handleEvent);
-		});
+				.subscribe(this::handleEvent)
+		);
 	}
 
 	private void handleEvent(PartitionEvent event) {
 		String body = event.getData().getBodyAsString();
-		System.out.println("Evento recibido en partición " + event.getPartitionContext().getPartitionId() + ": " + body);
+		String partitionId = event.getPartitionContext().getPartitionId();
+		logger.info("Event received on partition {}: {}", partitionId, body);
 
 		try {
 			JsonNode root = objectMapper.readTree(body);
-			String eventType = root.get("eventType").asText();
+			String eventType = root.path("eventType").asText(null);
 
-			switch (eventType) {
-				case "USER_CREATED" -> {
-					DomainEvent<UserCreatedEventBody> wrapper =
-						objectMapper.readValue(body, new TypeReference<DomainEvent<UserCreatedEventBody>>() {
-						});
-
-					UserCreatedEventBody user = wrapper.getBody();
-					userCreatedEvent(user);
-				}
-				case "user-address-update" -> {
-					DomainEvent<AddressUpdatedEventBody> wrapper =
-						objectMapper.readValue(body, new TypeReference<DomainEvent<AddressUpdatedEventBody>>() {
-						});
-
-					AddressUpdatedEventBody address = wrapper.getBody();
-					addressUpdatedEvent(address);
-				}
-				default -> {
-					System.out.println("Unhandled event: " + eventType);
-				}
+			if (eventType == null || !eventHandlers.containsKey(eventType)) {
+				logger.warn("Unhandled or missing event type: {}", eventType);
+				return;
 			}
+
+			eventHandlers.get(eventType).accept(root);
 		} catch (Exception e) {
-			System.err.println("Error while processing event: " + e.getMessage());
-			e.printStackTrace();
+			logger.error("Error while processing event", e);
 		}
 	}
 
-	private void userCreatedEvent(UserCreatedEventBody userCreatedEventBody) throws BusinessRuleValidationException {
-		User user = new User(userCreatedEventBody.getId(), userCreatedEventBody.getFullName(), userCreatedEventBody.getEmail(), userCreatedEventBody.getUsername(), UserUtils.stringToLocalDate(userCreatedEventBody.getCreatedAt()));
-		userRepository.create(user);
-		System.out.println("User created: " + user.getFullName() + " (" + user.getEmail() + ")");
+	private void handleUserCreatedEvent(JsonNode root) {
+		try {
+			DomainEvent<UserCreatedEventBody> event = objectMapper.convertValue(
+				root,
+				new TypeReference<DomainEvent<UserCreatedEventBody>>() {
+				}
+			);
+			UserCreatedEventBody data = event.getBody();
+			User user = new User(
+				data.getId(),
+				data.getFullName(),
+				data.getEmail(),
+				data.getUsername(),
+				data.getCreatedAt()
+			);
+			userRepository.create(user);
+			logger.info("User created: {} ({})", user.getFullName(), user.getEmail());
+		} catch (BusinessRuleValidationException e) {
+			logger.warn("Business rule violated while creating user: {}", e.getMessage(), e);
+		} catch (Exception e) {
+			logger.error("Error while handling USER_CREATED event", e);
+		}
 	}
 
-	private void addressUpdatedEvent(AddressUpdatedEventBody address) {
-		String completeAddress = address.getCity() + ", " + address.getStreet() + ". Latitude: " + address.getLatitude() + ". Longitude: " + address.getLongitude();
-		User user = userRepository.updateAddress(UUID.fromString(address.getClientGuid()), completeAddress);
-		System.out.println("Address updated. User: " + user.getFullName() + ", new address: " + user.getAddress());
+	private void handleAddressUpdatedEvent(JsonNode root) {
+		try {
+			DomainEvent<AddressUpdatedEventBody> event = objectMapper.convertValue(
+				root,
+				new TypeReference<DomainEvent<AddressUpdatedEventBody>>() {
+				}
+			);
+			AddressUpdatedEventBody data = event.getBody();
+			String completeAddress = String.format(
+				"%s, %s || Latitude: %s || Longitude: %s",
+				data.getCity(), data.getStreet(), data.getLatitude(), data.getLongitude()
+			);
+			User user = userRepository.updateAddress(UUID.fromString(data.getClientGuid()), completeAddress);
+			logger.info("Address updated for user {}: {}", user.getFullName(), user.getAddress());
+		} catch (Exception e) {
+			logger.error("Error while handling user-address-update event", e);
+		}
+	}
+
+	private void handleDeliveryDateUpdateEvent(JsonNode root) {
+		try {
+			DomainEvent<DeliveryDateUpdatedEventBody> event = objectMapper.convertValue(
+				root,
+				new TypeReference<DomainEvent<DeliveryDateUpdatedEventBody>>() {
+				}
+			);
+			DeliveryDateUpdatedEventBody data = event.getBody();
+			/* TODO: Implement saving dates for start cooking */
+			logger.info("Delivery date updated for user {} - new Date: {}", data.getClientGuid(), data.getNewDate());
+		} catch (Exception e) {
+			logger.error("Error while handling delivery-date-update event", e);
+		}
+	}
+
+	private void handleRecipeEvent(JsonNode root) {
+		try {
+			DomainEvent<RecipeCreatedEventBody> event = objectMapper.convertValue(
+				root,
+				new TypeReference<DomainEvent<RecipeCreatedEventBody>>() {
+				}
+			);
+			RecipeCreatedEventBody data = event.getBody();
+			UUID recipeId = UUID.randomUUID();
+			Recipe recipe = new Recipe(recipeId.toString(), data.getClientId(), data.getPlanDetails());
+			recipeRepository.create(recipe);
+
+			logger.info("Recipe created, clientId: {} - planDetails: {}", recipe.getClientId(), data.getPlanDetails());
+		} catch (Exception e) {
+			logger.error("Error while handling CONTRACT_DISPATCHED_FOR_RECIPE event", e);
+		}
 	}
 }

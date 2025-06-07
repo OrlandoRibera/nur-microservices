@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import publisher.DomainEventPublisher;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,129 +26,134 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ChangeFoodStatusHandlerTest {
+	@Mock
+	private FoodPackageRepository foodPackageRepository;
 
-  @InjectMocks
-  private ChangeFoodStatusHandler handler;
+	@Mock
+	private DomainEventPublisher publisher;
 
-  @Mock
-  private FoodRepository foodRepository;
+	@InjectMocks
+	private ChangeFoodStatusHandler handler;
 
-  @Mock
-  private FoodPackageRepository foodPackageRepository;
+	@Mock
+	private FoodRepository foodRepository;
 
-  private static UUID foodId;
-  private static UUID foodPackageId;
-  private static ChangeFoodStatusCommand command;
-  private static FoodPackage foodPackage;
-  private static ChangeFoodStatusDTO dto;
+	private static UUID foodId;
+	private static UUID foodPackageId;
+	private static ChangeFoodStatusCommand command;
+	private static FoodPackage foodPackage;
+	private static ChangeFoodStatusDTO dto;
 
-  @BeforeAll
-  static void setUpAll() throws BusinessRuleValidationException {
-    foodId = UUID.randomUUID();
-    foodPackageId = UUID.randomUUID();
+	@BeforeAll
+	static void setUpAll() throws BusinessRuleValidationException {
+		foodId = UUID.randomUUID();
+		foodPackageId = UUID.randomUUID();
 
-    dto = new ChangeFoodStatusDTO(foodId.toString(), FoodStatus.COOKED.toString());
-    command = new ChangeFoodStatusCommand(dto);
-  }
+		dto = new ChangeFoodStatusDTO(foodId.toString(), FoodStatus.COOKED.toString());
+		command = new ChangeFoodStatusCommand(dto);
+	}
 
-  @BeforeEach
-  void setUp() throws BusinessRuleValidationException {
-    // Reset status
-    Food food = new Food(foodId, "Pizza", FoodType.DINNER, FoodStatus.COOKING, 350.0f, foodPackageId);
-    foodPackage = new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(food), FoodPackageStatus.COOKING);
+	@BeforeEach
+	void setUp() throws BusinessRuleValidationException {
+		// Reset status
+		Food food = new Food(foodId, "Pizza", FoodType.DINNER, FoodStatus.COOKING, 350.0f, foodPackageId);
+		foodPackage = new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(food), FoodPackageStatus.COOKING);
 
 
-    // Mock response from foodRepository
-    when(foodRepository.get(foodId)).thenReturn(food);
-    when(foodRepository.findByFoodPackageId(foodPackageId)).thenReturn(List.of(food));
+		// Mock response from foodRepository
+		when(foodRepository.get(foodId)).thenReturn(food);
+		when(foodRepository.findByFoodPackageId(foodPackageId)).thenReturn(List.of(food));
 
-    // Mock response from FoodPackageRepository
-    when(foodPackageRepository.get(foodPackageId)).thenReturn(foodPackage);
-  }
+		// Mock response from FoodPackageRepository
+		when(foodPackageRepository.get(foodPackageId)).thenReturn(foodPackage);
+	}
 
-  @Test
-  void testHandleSuccess() throws BusinessRuleValidationException {
-    FoodDTO result = handler.handle(command);
+	@Test
+	@MockitoSettings(strictness = Strictness.LENIENT)
+	void testHandleSuccess() throws BusinessRuleValidationException {
+		doNothing().when(publisher).publish(anyList());
 
-    // Result should not be null and Status should be Cooked
-    assertNotNull(result);
-    assertEquals(FoodStatus.COOKED.toString(), result.status());
+		FoodDTO result = handler.handle(command);
 
-    // All methods should have been called
-    verify(foodRepository).get(foodId);
-    verify(foodRepository).update(any(Food.class));
-    verify(foodPackageRepository).update(any(FoodPackage.class));
-  }
+		// Result should not be null and Status should be Cooked
+		assertNotNull(result);
+		assertEquals(FoodStatus.COOKED.toString(), result.status());
 
-  @Test
-  @MockitoSettings(strictness = Strictness.LENIENT)
-  void testHandleFoodNotFound() throws BusinessRuleValidationException {
-    UUID foodIdNotFound = UUID.randomUUID();
+		// All methods should have been called
+		verify(foodRepository).get(foodId);
+		verify(foodRepository).update(any(Food.class));
+		verify(foodPackageRepository).update(any(FoodPackage.class));
+	}
 
-    ChangeFoodStatusDTO dto = new ChangeFoodStatusDTO(foodIdNotFound.toString(), FoodStatus.COOKED.toString());
-    ChangeFoodStatusCommand commandForNotFound = new ChangeFoodStatusCommand(dto);
+	@Test
+	@MockitoSettings(strictness = Strictness.LENIENT)
+	void testHandleFoodNotFound() throws BusinessRuleValidationException {
+		UUID foodIdNotFound = UUID.randomUUID();
 
-    // Food is not found
-    when(foodRepository.get(foodIdNotFound)).thenReturn(null);
+		ChangeFoodStatusDTO dto = new ChangeFoodStatusDTO(foodIdNotFound.toString(), FoodStatus.COOKED.toString());
+		ChangeFoodStatusCommand commandForNotFound = new ChangeFoodStatusCommand(dto);
 
-    // Run command
-    CustomException exception = assertThrows(CustomException.class, () -> handler.handle(commandForNotFound));
+		// Food is not found
+		when(foodRepository.get(foodIdNotFound)).thenReturn(null);
 
-    // Message for null food
-    assertEquals("Food not found", exception.getMessage());
-  }
+		// Run command
+		CustomException exception = assertThrows(CustomException.class, () -> handler.handle(commandForNotFound));
 
-  @Test
-  @MockitoSettings(strictness = Strictness.LENIENT)
-  void testHandleBusinessRuleValidationException() throws BusinessRuleValidationException {
-    // Mock Food class
-    Food foodMock = mock(Food.class);
+		// Message for null food
+		assertEquals("Food not found", exception.getMessage());
+	}
 
-    // Emulate get food from repository
-    when(foodRepository.get(UUID.fromString(dto.foodId()))).thenReturn(foodMock);
+	@Test
+	@MockitoSettings(strictness = Strictness.LENIENT)
+	void testHandleBusinessRuleValidationException() throws BusinessRuleValidationException {
+		// Mock Food class
+		Food foodMock = mock(Food.class);
 
-    // Emulate throw
-    doThrow(new BusinessRuleValidationException("Invalid status")).when(foodMock).nextStatus(any(FoodStatus.class));
+		// Emulate get food from repository
+		when(foodRepository.get(UUID.fromString(dto.foodId()))).thenReturn(foodMock);
 
-    // Run handler
-    FoodDTO result = handler.handle(command);
+		// Emulate throw
+		doThrow(new BusinessRuleValidationException("Invalid status")).when(foodMock).nextStatus(any(FoodStatus.class));
 
-    // FoodDTO should be null
-    assertNull(result);
-  }
+		// Run handler
+		FoodDTO result = handler.handle(command);
 
-  @Test
-  @MockitoSettings(strictness = Strictness.LENIENT)
-  void testHandleFoodPackageTransitionToCooking() throws BusinessRuleValidationException {
-    // Setup FoodPackage on New status
-    UUID uuid1 = UUID.randomUUID();
-    Food food1 = new Food("Palta", FoodType.BREAKFAST, 100.0f, uuid1);
-    Food food2 = new Food("Manga verde con sal", FoodType.BREAKFAST, 101.0f, uuid1);
-    UUID food1Id = food1.getId();
-    FoodPackage foodPackage1 = new FoodPackage(uuid1, UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(food1, food2), FoodPackageStatus.NEW);
+		// FoodDTO should be null
+		assertNull(result);
+	}
 
-    when(foodPackageRepository.get(uuid1)).thenReturn(foodPackage1);
-    when(foodRepository.get(food1Id)).thenReturn(food1);
-    when(foodRepository.findByFoodPackageId(uuid1)).thenReturn((List.of(food1, food2)));
+	@Test
+	@MockitoSettings(strictness = Strictness.LENIENT)
+	void testHandleFoodPackageTransitionToCooking() throws BusinessRuleValidationException {
+		// Setup FoodPackage on New status
+		UUID uuid1 = UUID.randomUUID();
+		Food food1 = new Food("Palta", FoodType.BREAKFAST, 100.0f, uuid1);
+		Food food2 = new Food("Manga verde con sal", FoodType.BREAKFAST, 101.0f, uuid1);
+		UUID food1Id = food1.getId();
+		FoodPackage foodPackage1 = new FoodPackage(uuid1, UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(food1, food2), FoodPackageStatus.NEW);
 
-    // Run handler
-    ChangeFoodStatusDTO dto1 = new ChangeFoodStatusDTO(food1Id.toString(), FoodStatus.COOKING.toString());
-    ChangeFoodStatusCommand command1 = new ChangeFoodStatusCommand(dto1);
-    FoodDTO result1 = handler.handle(command1);
+		when(foodPackageRepository.get(uuid1)).thenReturn(foodPackage1);
+		when(foodRepository.get(food1Id)).thenReturn(food1);
+		when(foodRepository.findByFoodPackageId(uuid1)).thenReturn((List.of(food1, food2)));
 
-    // Verify Foodpackage status is cooked because all foods where cooked
-    assertEquals(FoodPackageStatus.COOKING, foodPackage1.getStatus());
-  }
+		// Run handler
+		ChangeFoodStatusDTO dto1 = new ChangeFoodStatusDTO(food1Id.toString(), FoodStatus.COOKING.toString());
+		ChangeFoodStatusCommand command1 = new ChangeFoodStatusCommand(dto1);
+		FoodDTO result1 = handler.handle(command1);
 
-  @Test
-  void testHandleFoodPackageNotEmptyOrNotAllCooked() throws BusinessRuleValidationException {
-    Food cookedFood = new Food(foodId, "Pizza", FoodType.DINNER, FoodStatus.COOKED, 301.0f, foodPackageId);
-    Food uncookedFood = new Food(foodId, "Pizza", FoodType.DINNER, FoodStatus.PENDING, 302.0f, foodPackageId);
-    when(foodRepository.findByFoodPackageId(foodPackageId)).thenReturn(List.of(cookedFood, uncookedFood));
-    when(foodPackageRepository.get(foodPackageId)).thenReturn(foodPackage);
+		// Verify Foodpackage status is cooked because all foods where cooked
+		assertEquals(FoodPackageStatus.COOKING, foodPackage1.getStatus());
+	}
 
-    FoodDTO result = handler.handle(command);
+	@Test
+	@MockitoSettings(strictness = Strictness.LENIENT)
+	void testHandleFoodPackageNotEmptyOrNotAllCooked() throws BusinessRuleValidationException {
+		Food cookedFood = new Food(foodId, "Pizza", FoodType.DINNER, FoodStatus.COOKED, 301.0f, foodPackageId);
+		Food uncookedFood = new Food(foodId, "Pizza", FoodType.DINNER, FoodStatus.PENDING, 302.0f, foodPackageId);
 
-    assertEquals(FoodPackageStatus.COOKING, foodPackage.getStatus());
-  }
+		when(foodRepository.findByFoodPackageId(foodPackageId)).thenReturn(List.of(cookedFood, uncookedFood));
+		when(foodPackageRepository.get(foodPackageId)).thenReturn(foodPackage);
+
+		assertEquals(FoodPackageStatus.COOKING, foodPackage.getStatus());
+	}
 }

@@ -4,9 +4,7 @@ import annotations.Generated;
 import infrastructure.model.User;
 import infrastructure.model.UserJpaModel;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
+import java.util.Date;
 
 @Generated
 public class UserUtils {
@@ -21,7 +19,7 @@ public class UserUtils {
 		}
 	}
 
-	public static LocalDate stringToLocalDate(String localDate) {
-		return LocalDate.parse(localDate, DateTimeFormatter.ofPattern("yyyy-MMM-dd").withLocale(Locale.US));
+	public static Date stringToLocalDate(String date) {
+		return new Date(date);
 	}
 }

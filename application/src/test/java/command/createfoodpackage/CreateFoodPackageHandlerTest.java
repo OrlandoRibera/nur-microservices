@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import publisher.DomainEventPublisher;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,39 +17,44 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
 
 class CreateFoodPackageHandlerTest {
-  @Mock
-  private FoodPackageRepository foodPackageRepository;
+	@Mock
+	private FoodPackageRepository foodPackageRepository;
 
-  @InjectMocks
-  private CreateFoodPackageHandler handler;
+	@Mock
+	private DomainEventPublisher publisher;
 
-  @BeforeEach
-  void setUp() {
-    MockitoAnnotations.openMocks(this);
-  }
+	@InjectMocks
+	private CreateFoodPackageHandler handler;
 
-  @Test
-  void shouldCreateFoodPackageSuccessfully() {
-    // Arrange
-    String recipeId = UUID.randomUUID().toString();
-    String clientId = UUID.randomUUID().toString();
-    String addressId = UUID.randomUUID().toString();
-    CreateFoodPackageCommand command = new CreateFoodPackageCommand(recipeId, clientId, addressId);
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
+	@Test
+	void shouldCreateFoodPackageSuccessfully() {
+		// Arrange
+		String recipeId = UUID.randomUUID().toString();
+		String clientId = UUID.randomUUID().toString();
+		String addressId = UUID.randomUUID().toString();
+		CreateFoodPackageCommand command = new CreateFoodPackageCommand(recipeId, clientId, addressId);
+		doNothing().when(publisher).publish(anyList());
 
-    // Act
-    FoodPackageDTO result = handler.handle(command);
+		// Act
+		FoodPackageDTO result = handler.handle(command);
 
-    FoodPackageDTO expectedDTO = new FoodPackageDTO(result.id(), recipeId, clientId, addressId, List.of(),
-      FoodPackageStatus.NEW);
+		FoodPackageDTO expectedDTO = new FoodPackageDTO(result.id(), recipeId, clientId, addressId, List.of(),
+			FoodPackageStatus.NEW);
 
-    // Assert
-    assertNotNull(result);
-    assertEquals(expectedDTO, result);
-    verify(foodPackageRepository).create(any(FoodPackage.class));
-  }
+		// Assert
+		assertNotNull(result);
+		assertEquals(expectedDTO, result);
+		verify(foodPackageRepository).create(any(FoodPackage.class));
+	}
 }

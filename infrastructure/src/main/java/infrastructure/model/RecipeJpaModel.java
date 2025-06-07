@@ -11,13 +11,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "users")
-public class UserJpaModel {
+@Table(name = "recipes")
+public class RecipeJpaModel {
 	@Id
 	private String id;
-	private String fullName;
-	private String email;
-	private String username;
-	private String createdAt;
-	private String address;
+	private String clientId;
+	private String planDetails;
 }

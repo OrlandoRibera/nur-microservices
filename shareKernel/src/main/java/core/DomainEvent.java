@@ -1,11 +1,12 @@
 package core;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class DomainEvent<T> {
 	private String eventType;
 	private String eventVersion;
-	private Date timestamp;
+	private String timestamp;
 	private T body;
 	private String source;
 
@@ -15,7 +16,7 @@ public class DomainEvent<T> {
 	protected DomainEvent(String eventType, String eventVersion, T body, String source) {
 		this.eventType = eventType;
 		this.eventVersion = eventVersion;
-		this.timestamp = new Date();
+		this.timestamp = new Date().toString();
 		this.body = body;
 		this.source = source;
 	}
@@ -36,11 +37,11 @@ public class DomainEvent<T> {
 		this.eventVersion = eventVersion;
 	}
 
-	public Date getTimestamp() {
+	public String getTimestamp() {
 		return timestamp;
 	}
 
-	public void setTimestamp(Date timestamp) {
+	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
 	}
 
