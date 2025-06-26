@@ -60,27 +60,28 @@ class FoodPackageJpaRepositoryTest {
 
   @Test
   void testCreate() {
-    FoodPackage foodPackage = mock(FoodPackage.class);
-    when(foodPackage.getId()).thenReturn(UUID.randomUUID());
-    when(foodPackage.getStatus()).thenReturn(FoodPackageStatus.NEW);
-    when(foodPackage.getRecipeId()).thenReturn(UUID.randomUUID());
-    when(foodPackage.getClientId()).thenReturn(UUID.randomUUID());
-    when(foodPackage.getAddressId()).thenReturn(UUID.randomUUID());
-    when(foodPackage.getFoods()).thenReturn(new ArrayList<>());
-    FoodPackageJpaModel jpaModel = FoodPackageJpaModel.builder().id(foodPackage.getId())
-        .status(foodPackage.getStatus().name()).recipeId(foodPackage.getRecipeId()).clientId(foodPackage.getClientId())
-        .addressId(foodPackage.getAddressId()).foods(new ArrayList<>()).build();
+    FoodPackage mockFoodPackage = mock(FoodPackage.class);
+    when(mockFoodPackage.getId()).thenReturn(UUID.randomUUID());
+    when(mockFoodPackage.getStatus()).thenReturn(FoodPackageStatus.NEW);
+    when(mockFoodPackage.getRecipeId()).thenReturn(UUID.randomUUID());
+    when(mockFoodPackage.getClientId()).thenReturn(UUID.randomUUID());
+    when(mockFoodPackage.getAddressId()).thenReturn(UUID.randomUUID());
+    when(mockFoodPackage.getFoods()).thenReturn(new ArrayList<>());
+    FoodPackageJpaModel jpaModel = FoodPackageJpaModel.builder().id(mockFoodPackage.getId())
+        .status(mockFoodPackage.getStatus().name()).recipeId(mockFoodPackage.getRecipeId())
+        .clientId(mockFoodPackage.getClientId())
+        .addressId(mockFoodPackage.getAddressId()).foods(new ArrayList<>()).build();
     when(foodPackageCrudRepository.save(any())).thenReturn(jpaModel);
-    UUID result = foodPackageJpaRepository.create(foodPackage);
+    UUID result = foodPackageJpaRepository.create(mockFoodPackage);
     assertNotNull(result);
   }
 
   @Test
   void testUpdateNotFound() {
-    FoodPackage foodPackage = mock(FoodPackage.class);
-    when(foodPackage.getId()).thenReturn(UUID.randomUUID());
+    FoodPackage mockFoodPackage = mock(FoodPackage.class);
+    when(mockFoodPackage.getId()).thenReturn(UUID.randomUUID());
     when(foodPackageCrudRepository.findById(any())).thenReturn(Optional.empty());
-    assertThrows(CustomException.class, () -> foodPackageJpaRepository.update(foodPackage));
+    assertThrows(CustomException.class, () -> foodPackageJpaRepository.update(mockFoodPackage));
   }
 
   @Test

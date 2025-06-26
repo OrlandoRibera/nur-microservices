@@ -1,9 +1,11 @@
 package infrastructure.model;
 
-import core.BusinessRuleValidationException;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import core.BusinessRuleValidationException;
 
 class RecipeTest {
     @Test
@@ -31,7 +33,7 @@ class RecipeTest {
     }
 
     @Test
-    void settersAndGetters() throws BusinessRuleValidationException {
+    void settersAndGetters() {
         Recipe recipe = new Recipe();
         recipe.setId("id2");
         recipe.setClientId("client2");
