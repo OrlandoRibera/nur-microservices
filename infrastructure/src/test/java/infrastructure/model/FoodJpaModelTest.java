@@ -19,17 +19,17 @@ class FoodJpaModelTest {
     foodPackageId = UUID.randomUUID();
 
     FoodPackageJpaModel foodPackage = FoodPackageJpaModel.builder()
-      .id(foodPackageId)
-      .build();
+        .id(foodPackageId)
+        .build();
 
     food = FoodJpaModel.builder()
-      .id(id)
-      .name("Test Food")
-      .status("PENDING")
-      .type("BREAKFAST")
-      .kcal(100.0f)
-      .foodPackage(foodPackage)
-      .build();
+        .id(id)
+        .name("Test Food")
+        .status("PENDING")
+        .type("BREAKFAST")
+        .kcal(100.0f)
+        .foodPackage(foodPackage)
+        .build();
   }
 
   @Test
@@ -64,5 +64,24 @@ class FoodJpaModelTest {
     assertNull(emptyFood.getType());
     assertEquals(0.0f, emptyFood.getKcal());
     assertNull(emptyFood.getFoodPackage());
+  }
+
+  @Test
+  void testBuilderAndGettersSetters() {
+    UUID id = UUID.randomUUID();
+    FoodJpaModel model = FoodJpaModel.builder()
+        .id(id)
+        .name("Pizza")
+        .kcal(300.0f)
+        .type("LUNCH")
+        .status("PENDING")
+        .build();
+    assertEquals(id, model.getId());
+    assertEquals("Pizza", model.getName());
+    assertEquals(300.0f, model.getKcal());
+    assertEquals("LUNCH", model.getType());
+    assertEquals("PENDING", model.getStatus());
+    model.setName("Burger");
+    assertEquals("Burger", model.getName());
   }
 }

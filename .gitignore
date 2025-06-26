@@ -37,3 +37,29 @@ node_modules
 /presentation/.azure/.gitignore
 /presentation/.azure/default/connections.xml
 /presentation/.azure/profiles.xml
+
+### Local Development Files ###
+# Local application properties (contains sensitive data and local configurations)
+**/application-local.properties
+**/application-dev.properties
+**/application-local.yml
+**/application-dev.yml
+
+# Local environment variables
+.env
+.env.local
+.env.development
+
+# IDE specific files
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

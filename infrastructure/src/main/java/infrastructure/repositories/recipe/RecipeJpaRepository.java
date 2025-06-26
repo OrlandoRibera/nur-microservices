@@ -14,12 +14,14 @@ public class RecipeJpaRepository implements RecipeRepository {
 	private RecipeCrudRepository recipeCrudRepository;
 
 	public RecipeJpaRepository(RecipeCrudRepository recipeCrudRepository) {
+		this.recipeCrudRepository = recipeCrudRepository;
 	}
 
 	@Override
 	public Recipe get(UUID id) {
 		RecipeJpaModel recipeJpaModel = recipeCrudRepository.findById(id.toString()).orElse(null);
-		if (recipeJpaModel == null) throw new CustomException("Recipe not found");
+		if (recipeJpaModel == null)
+			throw new CustomException("Recipe not found");
 
 		return RecipeUtils.jpaMotelToRecipe(recipeJpaModel);
 	}
@@ -27,10 +29,9 @@ public class RecipeJpaRepository implements RecipeRepository {
 	@Override
 	public UUID create(Recipe recipe) {
 		RecipeJpaModel recipeJpaModel = new RecipeJpaModel(
-			recipe.getId(),
-			recipe.getClientId(),
-			recipe.getPlanDetails()
-		);
+				recipe.getId(),
+				recipe.getClientId(),
+				recipe.getPlanDetails());
 
 		recipeCrudRepository.save(recipeJpaModel);
 		return UUID.fromString(recipe.getId());

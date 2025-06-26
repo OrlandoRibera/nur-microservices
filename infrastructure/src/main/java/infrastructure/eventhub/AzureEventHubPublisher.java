@@ -7,12 +7,14 @@ import com.azure.messaging.eventhubs.EventHubClientBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.DomainEvent;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 import publisher.DomainEventPublisher;
 
 import java.util.List;
 
 @Component
+@ConditionalOnProperty(prefix = "azure.eventhub", name = {"connection-string", "hub-name"})
 public class AzureEventHubPublisher implements DomainEventPublisher {
 
 	private final EventHubProducerClient producer;
