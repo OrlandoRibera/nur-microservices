@@ -23,13 +23,13 @@ class FoodPackageJpaModelTest {
     addressId = UUID.randomUUID();
     recipeId = UUID.randomUUID();
     foodPackage = FoodPackageJpaModel.builder()
-      .id(id)
-      .clientId(clientId)
-      .addressId(addressId)
-      .recipeId(recipeId)
-      .status("NEW")
-      .foods(new ArrayList<>())
-      .build();
+        .id(id)
+        .clientId(clientId)
+        .addressId(addressId)
+        .recipeId(recipeId)
+        .status("NEW")
+        .foods(new ArrayList<>())
+        .build();
   }
 
   @Test
@@ -55,12 +55,12 @@ class FoodPackageJpaModelTest {
   @Test
   void testAddFood() {
     FoodJpaModel food = FoodJpaModel.builder()
-      .id(UUID.randomUUID())
-      .name("Test Food")
-      .status("PENDING")
-      .type("BREAKFAST")
-      .kcal(100.0f)
-      .build();
+        .id(UUID.randomUUID())
+        .name("Test Food")
+        .status("PENDING")
+        .type("BREAKFAST")
+        .kcal(100.0f)
+        .build();
 
     foodPackage.getFoods().add(food);
 
@@ -71,12 +71,12 @@ class FoodPackageJpaModelTest {
   @Test
   void testRemoveFood() {
     FoodJpaModel food = FoodJpaModel.builder()
-      .id(UUID.randomUUID())
-      .name("Test Food")
-      .status("PENDING")
-      .type("BREAKFAST")
-      .kcal(100.0f)
-      .build();
+        .id(UUID.randomUUID())
+        .name("Test Food")
+        .status("PENDING")
+        .type("BREAKFAST")
+        .kcal(100.0f)
+        .build();
 
     foodPackage.getFoods().add(food);
     assertEquals(1, foodPackage.getFoods().size());
@@ -91,5 +91,23 @@ class FoodPackageJpaModelTest {
     assertNull(emptyPackage.getId());
     assertNull(emptyPackage.getStatus());
     assertNotNull(emptyPackage.getFoods());
+  }
+
+  @Test
+  void testBuilderGettersSettersAndIdConstructor() {
+    UUID id = UUID.randomUUID();
+    FoodPackageJpaModel model = FoodPackageJpaModel.builder()
+        .id(id)
+        .recipeId(UUID.randomUUID())
+        .clientId(UUID.randomUUID())
+        .addressId(UUID.randomUUID())
+        .status("NEW")
+        .build();
+    assertEquals(id, model.getId());
+    assertEquals("NEW", model.getStatus());
+    model.setStatus("COOKED");
+    assertEquals("COOKED", model.getStatus());
+    FoodPackageJpaModel model2 = new FoodPackageJpaModel(id);
+    assertEquals(id, model2.getId());
   }
 }

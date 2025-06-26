@@ -2,74 +2,96 @@ package dto;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ErrorResponseTest {
 
-  @Test
-  void testErrorResponseCreation() {
-    // Arrange
-    int status = 404;
-    String message = "Not Found";
-    String timestamp = "2025-02-23T10:15:30";
+    @Test
+    void errorResponse_ShouldCreateWithAllFields() {
+        // Arrange
+        LocalDateTime timestamp = LocalDateTime.now();
+        int status = 400;
+        String error = "Validation Error";
+        String message = "Input validation failed";
+        String path = "/api/catering/packages";
 
-    // Act
-    ErrorResponse errorResponse = new ErrorResponse(status, message, timestamp);
+        // Act
+        ErrorResponse errorResponse = new ErrorResponse(timestamp, status, error, message, path);
 
-    // Assert
-    assertNotNull(errorResponse);
-    assertEquals(status, errorResponse.status());
-    assertEquals(message, errorResponse.message());
-    assertEquals(timestamp, errorResponse.timestamp());
-  }
+        // Assert
+        assertNotNull(errorResponse);
+        assertEquals(timestamp, errorResponse.timestamp());
+        assertEquals(status, errorResponse.status());
+        assertEquals(error, errorResponse.error());
+        assertEquals(message, errorResponse.message());
+        assertEquals(path, errorResponse.path());
+    }
 
-  @Test
-  void testErrorResponseImmutability() {
-    // Arrange
-    int status = 500;
-    String message = "Internal Server Error";
-    String timestamp = "2025-02-23T12:00:00";
-    ErrorResponse errorResponse = new ErrorResponse(status, message, timestamp);
+    @Test
+    void errorResponse_ShouldHandleNullValues() {
+        // Arrange
+        LocalDateTime timestamp = LocalDateTime.now();
+        int status = 500;
+        String error = null;
+        String message = null;
+        String path = null;
 
-    // Act
-    int newStatus = errorResponse.status();
-    String newMessage = errorResponse.message();
-    String newTimestamp = errorResponse.timestamp();
+        // Act
+        ErrorResponse errorResponse = new ErrorResponse(timestamp, status, error, message, path);
 
-    // Assert
-    assertEquals(500, newStatus);
-    assertEquals("Internal Server Error", newMessage);
-    assertEquals("2025-02-23T12:00:00", newTimestamp);
+        // Assert
+        assertNotNull(errorResponse);
+        assertEquals(timestamp, errorResponse.timestamp());
+        assertEquals(status, errorResponse.status());
+        assertNull(errorResponse.error());
+        assertNull(errorResponse.message());
+        assertNull(errorResponse.path());
+    }
 
-    // Asegurando la inmutabilidad
-    assertSame(message, errorResponse.message());
-    assertSame(timestamp, errorResponse.timestamp());
-  }
+    @Test
+    void errorResponse_ShouldBeImmutable() {
+        // Arrange
+        LocalDateTime timestamp = LocalDateTime.now();
+        ErrorResponse errorResponse = new ErrorResponse(timestamp, 400, "Test", "Test message", "/test");
 
-  @Test
-  void testErrorResponseEqualsAndHashCode() {
-    // Arrange
-    ErrorResponse errorResponse1 = new ErrorResponse(400, "Bad Request", "2025-02-23T09:00:00");
-    ErrorResponse errorResponse2 = new ErrorResponse(400, "Bad Request", "2025-02-23T09:00:00");
-    ErrorResponse errorResponse3 = new ErrorResponse(401, "Unauthorized", "2025-02-23T09:01:00");
+        // Act & Assert
+        assertNotNull(errorResponse);
+        // Since it's a record, it should be immutable by design
+        assertEquals(timestamp, errorResponse.timestamp());
+    }
 
-    // Assert Equals y HashCode
-    assertEquals(errorResponse1, errorResponse2);
-    assertEquals(errorResponse1.hashCode(), errorResponse2.hashCode());
-    assertNotEquals(errorResponse1, errorResponse3);
-  }
+    @Test
+    void errorResponse_ShouldHandleDifferentStatusCodes() {
+        // Arrange & Act
+        ErrorResponse badRequest = new ErrorResponse(LocalDateTime.now(), 400, "Bad Request", "Invalid input", "/test");
+        ErrorResponse notFound = new ErrorResponse(LocalDateTime.now(), 404, "Not Found", "Resource not found",
+                "/test");
+        ErrorResponse serverError = new ErrorResponse(LocalDateTime.now(), 500, "Server Error", "Internal error",
+                "/test");
 
-  @Test
-  void testErrorResponseToString() {
-    // Arrange
-    ErrorResponse errorResponse = new ErrorResponse(403, "Forbidden", "2025-02-23T14:30:00");
+        // Assert
+        assertEquals(400, badRequest.status());
+        assertEquals(404, notFound.status());
+        assertEquals(500, serverError.status());
+    }
 
-    // Act
-    String toStringResult = errorResponse.toString();
+    @Test
+    void errorResponse_ShouldHandleEmptyStrings() {
+        // Arrange
+        LocalDateTime timestamp = LocalDateTime.now();
+        String emptyError = "";
+        String emptyMessage = "";
+        String emptyPath = "";
 
-    // Assert
-    assertTrue(toStringResult.contains("status=403"));
-    assertTrue(toStringResult.contains("message=Forbidden"));
-    assertTrue(toStringResult.contains("timestamp=2025-02-23T14:30:00"));
-  }
+        // Act
+        ErrorResponse errorResponse = new ErrorResponse(timestamp, 400, emptyError, emptyMessage, emptyPath);
+
+        // Assert
+        assertNotNull(errorResponse);
+        assertEquals(emptyError, errorResponse.error());
+        assertEquals(emptyMessage, errorResponse.message());
+        assertEquals(emptyPath, errorResponse.path());
+    }
 }

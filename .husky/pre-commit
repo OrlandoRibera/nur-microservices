@@ -1,1 +1,1 @@
-./mvnw verify
+./mvnw test

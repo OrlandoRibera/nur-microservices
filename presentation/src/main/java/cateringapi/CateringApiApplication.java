@@ -5,10 +5,11 @@ import an.awesome.pipelinr.Notification;
 import an.awesome.pipelinr.Pipeline;
 import an.awesome.pipelinr.Pipelinr;
 import annotations.Generated;
-import infrastructure.repositories.FoodPackageRepository;
-import infrastructure.repositories.FoodRepository;
-import infrastructure.repositories.food.FoodJpaRepository;
-import infrastructure.repositories.foodpackage.FoodPackageJpaRepository;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,10 +19,20 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import java.util.List;
+
 @SpringBootApplication
-@ComponentScan(basePackages = {"controllers", "infrastructure.repositories", "infrastructure.eventhub", "command", "query", "event", "core"})
+@ComponentScan(basePackages = {
+		"controllers",
+		"infrastructure.repositories",
+		"infrastructure.eventhub",
+		"command",
+		"publisher",
+		"dto",
+		"mappers"
+})
 @EntityScan("infrastructure.model")
-@EnableJpaRepositories(basePackages = {"infrastructure.repositories"})
+@EnableJpaRepositories(basePackages = { "infrastructure.repositories" })
 @EnableTransactionManagement
 @Generated
 public class CateringApiApplication {
@@ -31,13 +42,32 @@ public class CateringApiApplication {
 
 	@Bean
 	Pipeline pipeline(
-		ObjectProvider<Command.Handler> commandHandlers,
-		ObjectProvider<Notification.Handler> notificationHandlers,
-		ObjectProvider<Command.Middleware> middlewares
-	) {
+			ObjectProvider<Command.Handler> commandHandlers,
+			ObjectProvider<Notification.Handler> notificationHandlers,
+			ObjectProvider<Command.Middleware> middlewares) {
 		return new Pipelinr()
-			.with(commandHandlers::stream)
-			.with(notificationHandlers::stream)
-			.with(middlewares::orderedStream);
+				.with(() -> commandHandlers.stream())
+				.with(() -> notificationHandlers.stream())
+				.with(() -> middlewares.stream());
+	}
+
+	@Bean
+	public OpenAPI customOpenAPI() {
+		return new OpenAPI()
+				.info(new Info()
+						.title("Catering Microservice API")
+						.version("1.0.0")
+						.description(
+								"Microservice responsible for managing food packages, cooking, packaging, and dispatching meals")
+						.contact(new Contact()
+								.name("Catering Team")
+								.email("catering@example.com")
+								.url("https://github.com/OrlandoRibera/nur-microservices"))
+						.license(new License()
+								.name("MIT License")
+								.url("https://opensource.org/licenses/MIT")))
+				.servers(List.of(
+						new Server().url("http://localhost:8080").description("Local Development Server"),
+						new Server().url("https://catering-api.example.com").description("Production Server")));
 	}
 }
