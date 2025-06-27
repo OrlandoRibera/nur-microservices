@@ -67,7 +67,7 @@ public class CateringApiApplication {
 								.name("MIT License")
 								.url("https://opensource.org/licenses/MIT")))
 				.servers(List.of(
-						new Server().url("http://localhost:8080").description("Local Development Server"),
-						new Server().url("https://catering-api.example.com").description("Production Server")));
+						new Server().url("https://catering-guedavfugtbtdmbj.brazilsouth-01.azurewebsites.net")
+								.description("Production Server")));
 	}
 }
