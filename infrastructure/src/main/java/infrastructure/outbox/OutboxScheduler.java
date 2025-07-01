@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class OutboxScheduler {
-    
+
     private final OutboxService outboxService;
-    
+
     /**
-     * Process outbox messages every 5 minutes
+     * Process outbox messages every 1 minute
      */
-    @Scheduled(fixedRate = 300000) // 5 minutes = 300,000 milliseconds
+    @Scheduled(fixedRate = 60000) // 1 minute = 60,000 milliseconds
     public void processOutboxMessages() {
         try {
             log.debug("Starting scheduled outbox message processing");
@@ -24,7 +24,7 @@ public class OutboxScheduler {
             log.error("Error during scheduled outbox message processing", e);
         }
     }
-    
+
     /**
      * Clean up processed messages every day at 2 AM
      */
@@ -37,4 +37,4 @@ public class OutboxScheduler {
             log.error("Error during scheduled cleanup of processed outbox messages", e);
         }
     }
-} 
+}
