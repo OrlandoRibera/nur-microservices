@@ -17,6 +17,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.List;
@@ -26,6 +27,8 @@ import java.util.List;
 		"controllers",
 		"infrastructure.repositories",
 		"infrastructure.eventhub",
+		"infrastructure.outbox",
+		"infrastructure.config",
 		"command",
 		"publisher",
 		"dto",
@@ -34,6 +37,7 @@ import java.util.List;
 @EntityScan("infrastructure.model")
 @EnableJpaRepositories(basePackages = { "infrastructure.repositories" })
 @EnableTransactionManagement
+@EnableScheduling
 @Generated
 public class CateringApiApplication {
 	public static void main(String[] args) {
