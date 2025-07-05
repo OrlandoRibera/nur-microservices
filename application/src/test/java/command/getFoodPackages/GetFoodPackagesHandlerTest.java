@@ -1,11 +1,9 @@
 package command.getFoodPackages;
 
-import core.BusinessRuleValidationException;
 import dto.FoodPackageDTO;
 import infrastructure.model.FoodPackage;
 import infrastructure.model.FoodPackageStatus;
 import infrastructure.repositories.FoodPackageRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,37 +19,37 @@ import static org.mockito.Mockito.when;
 
 class GetFoodPackagesHandlerTest {
 
-  @Mock
-  private FoodPackageRepository foodPackageRepository;
+	@Mock
+	private FoodPackageRepository foodPackageRepository;
 
-  @InjectMocks
-  private GetFoodPackagesHandler handler;
+	@InjectMocks
+	private GetFoodPackagesHandler handler;
 
-  @BeforeEach
-  void setUp() {
-    MockitoAnnotations.openMocks(this);
-  }
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+	}
 
-  @Test
-  void shouldGetSuccessfully() {
-    GetFoodPackagesCommand command = new GetFoodPackagesCommand();
-    List<FoodPackage> foodPackages = new ArrayList<>();
-    foodPackages.add(new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.NEW));
-    foodPackages.add(new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.NEW));
+	@Test
+	void shouldGetSuccessfully() {
+		GetFoodPackagesCommand command = new GetFoodPackagesCommand();
+		List<FoodPackage> foodPackages = new ArrayList<>();
+		foodPackages.add(new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.NEW));
+		foodPackages.add(new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.NEW));
 
-    when(foodPackageRepository.getAll()).thenReturn(foodPackages);
+		when(foodPackageRepository.getAll()).thenReturn(foodPackages);
 
-    List<FoodPackageDTO> result = handler.handle(command);
-    assertEquals(result.size(), foodPackages.size());
-  }
+		List<FoodPackageDTO> result = handler.handle(command);
+		assertEquals(result.size(), foodPackages.size());
+	}
 
-  @Test
-  void shouldReturnEmptyList() {
-    GetFoodPackagesCommand command = new GetFoodPackagesCommand();
-    when(foodPackageRepository.getAll()).thenReturn(List.of());
+	@Test
+	void shouldReturnEmptyList() {
+		GetFoodPackagesCommand command = new GetFoodPackagesCommand();
+		when(foodPackageRepository.getAll()).thenReturn(List.of());
 
-    List<FoodPackageDTO> result = handler.handle(command);
+		List<FoodPackageDTO> result = handler.handle(command);
 
-    assertEquals(result.size(), 0);
-  }
+		assertEquals(0, result.size());
+	}
 }

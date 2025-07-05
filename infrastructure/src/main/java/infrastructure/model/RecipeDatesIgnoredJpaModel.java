@@ -13,12 +13,12 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "recipes")
-public class RecipeJpaModel {
+@Table(name = "recipe_dates_ignored")
+public class RecipeDatesIgnoredJpaModel {
 	@Id
 	private String id;
+	private String recipeId;
 	private String clientId;
-	private String planDetails;
-	private Date initDate;
-	private Date endDate;
+	private Date fromDate;
+	private Date toDate;
 }

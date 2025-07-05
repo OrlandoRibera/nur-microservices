@@ -32,9 +32,9 @@ public class UserJpaRepository implements UserRepository {
 	public UUID create(User user) {
 		UserJpaModel userJpaModel = new UserJpaModel(
 			user.getId(),
-			user.getUsername(),
-			user.getEmail(),
 			user.getFullName(),
+			user.getEmail(),
+			user.getUsername(),
 			user.getCreatedAt(),
 			user.getAddress()
 		);

@@ -8,12 +8,12 @@ class DeliveryDateUpdatedEventBodyTest {
     void testNoArgsConstructorAndSetters() {
         DeliveryDateUpdatedEventBody body = new DeliveryDateUpdatedEventBody();
         body.setClientGuid("Client");
-        body.setPreviousDate("Prev");
-        body.setNewDate("New");
+        body.setFromDate("Prev");
+        body.setToDate("New");
         body.setAddressGuid("Addr");
         assertEquals("Client", body.getClientGuid());
-        assertEquals("Prev", body.getPreviousDate());
-        assertEquals("New", body.getNewDate());
+        assertEquals("Prev", body.getFromDate());
+        assertEquals("New", body.getToDate());
         assertEquals("Addr", body.getAddressGuid());
     }
 
@@ -21,8 +21,8 @@ class DeliveryDateUpdatedEventBodyTest {
     void testAllArgsConstructor() {
         DeliveryDateUpdatedEventBody body = new DeliveryDateUpdatedEventBody("Client", "Prev", "New", "Addr");
         assertEquals("Client", body.getClientGuid());
-        assertEquals("Prev", body.getPreviousDate());
-        assertEquals("New", body.getNewDate());
+        assertEquals("Prev", body.getFromDate());
+        assertEquals("New", body.getToDate());
         assertEquals("Addr", body.getAddressGuid());
     }
 }

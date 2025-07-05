@@ -6,8 +6,6 @@ import dto.FoodPackageDTO;
 import java.util.List;
 
 public class GetFoodPackagesCommand implements Command<List<FoodPackageDTO>> {
-
-  public GetFoodPackagesCommand() {
-  }
-
+	public GetFoodPackagesCommand() {
+	}
 }

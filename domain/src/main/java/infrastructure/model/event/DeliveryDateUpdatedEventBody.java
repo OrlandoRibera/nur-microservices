@@ -2,17 +2,17 @@ package infrastructure.model.event;
 
 public class DeliveryDateUpdatedEventBody {
 	private String clientGuid;
-	private String previousDate;
-	private String newDate;
+	private String fromDate;
+	private String toDate;
 	private String addressGuid;
 
 	public DeliveryDateUpdatedEventBody() {
 	}
 
-	public DeliveryDateUpdatedEventBody(String clientGuid, String previousDate, String newDate, String addressGuid) {
+	public DeliveryDateUpdatedEventBody(String clientGuid, String fromDate, String toDate, String addressGuid) {
 		this.clientGuid = clientGuid;
-		this.previousDate = previousDate;
-		this.newDate = newDate;
+		this.fromDate = fromDate;
+		this.toDate = toDate;
 		this.addressGuid = addressGuid;
 	}
 
@@ -24,20 +24,20 @@ public class DeliveryDateUpdatedEventBody {
 		this.clientGuid = clientGuid;
 	}
 
-	public String getPreviousDate() {
-		return previousDate;
+	public String getFromDate() {
+		return fromDate;
 	}
 
-	public void setPreviousDate(String previousDate) {
-		this.previousDate = previousDate;
+	public void setFromDate(String fromDate) {
+		this.fromDate = fromDate;
 	}
 
-	public String getNewDate() {
-		return newDate;
+	public String getToDate() {
+		return toDate;
 	}
 
-	public void setNewDate(String newDate) {
-		this.newDate = newDate;
+	public void setToDate(String toDate) {
+		this.toDate = toDate;
 	}
 
 	public String getAddressGuid() {

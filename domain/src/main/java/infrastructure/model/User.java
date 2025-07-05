@@ -2,8 +2,6 @@ package infrastructure.model;
 
 import core.BusinessRuleValidationException;
 
-import java.util.Date;
-
 public class User {
 	private String id;
 	private String fullName;
