@@ -53,7 +53,7 @@ class CreateFoodInPackageHandlerTest {
   void shouldThrowExceptionWhenFoodPackageInInvalidStatus() throws BusinessRuleValidationException {
     // Arrange
     CreateFoodInPackageCommand command = new CreateFoodInPackageCommand(new FoodDTO("non-existing-id", "Palta ew", "PENDING", "BREAKFAST", 100.0f, UUID.randomUUID().toString()));
-    FoodPackage foodPackage = new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.DISPATCHED);
+    FoodPackage foodPackage = new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), "", List.of(), FoodPackageStatus.DISPATCHED);
     when(foodPackageRepository.get(any(UUID.class))).thenReturn(foodPackage);
 
     // Act and Assert
@@ -64,7 +64,7 @@ class CreateFoodInPackageHandlerTest {
   @Test
   void shouldCreateFoodInFoodPackage() throws BusinessRuleValidationException {
     // Arrange
-    FoodPackage foodPackage = new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.NEW);
+    FoodPackage foodPackage = new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), "", List.of(), FoodPackageStatus.NEW);
     when(foodPackageRepository.get(foodPackage.getId())).thenReturn(foodPackage);
 
     String foodDTOId = UUID.randomUUID().toString();
@@ -86,7 +86,7 @@ class CreateFoodInPackageHandlerTest {
     CreateFoodInPackageCommand command = new CreateFoodInPackageCommand(new FoodDTO(UUID.randomUUID().toString(),
       "Papas", "PENDING", "BREAKFAST", 100.0f, UUID.randomUUID().toString()));
 
-    FoodPackage foodPackage = new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.NEW);
+    FoodPackage foodPackage = new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), "", List.of(), FoodPackageStatus.NEW);
     doThrow(new BusinessRuleValidationException("Food package not found")).when(foodPackageRepository).get(any(UUID.class));
 
     // Act

@@ -57,7 +57,7 @@ class ChangeFoodStatusHandlerTest {
 	void setUp() throws BusinessRuleValidationException {
 		// Reset status
 		Food food = new Food(foodId, "Pizza", FoodType.DINNER, FoodStatus.COOKING, 350.0f, foodPackageId);
-		foodPackage = new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(food), FoodPackageStatus.COOKING);
+		foodPackage = new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), "", List.of(food), FoodPackageStatus.COOKING);
 
 
 		// Mock response from foodRepository
@@ -130,7 +130,7 @@ class ChangeFoodStatusHandlerTest {
 		Food food1 = new Food("Palta", FoodType.BREAKFAST, 100.0f, uuid1);
 		Food food2 = new Food("Manga verde con sal", FoodType.BREAKFAST, 101.0f, uuid1);
 		UUID food1Id = food1.getId();
-		FoodPackage foodPackage1 = new FoodPackage(uuid1, UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(food1, food2), FoodPackageStatus.NEW);
+		FoodPackage foodPackage1 = new FoodPackage(uuid1, UUID.randomUUID(), UUID.randomUUID(), "", List.of(food1, food2), FoodPackageStatus.NEW);
 
 		when(foodPackageRepository.get(uuid1)).thenReturn(foodPackage1);
 		when(foodRepository.get(food1Id)).thenReturn(food1);

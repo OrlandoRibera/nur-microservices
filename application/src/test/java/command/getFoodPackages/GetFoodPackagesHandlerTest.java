@@ -34,8 +34,8 @@ class GetFoodPackagesHandlerTest {
 	void shouldGetSuccessfully() {
 		GetFoodPackagesCommand command = new GetFoodPackagesCommand();
 		List<FoodPackage> foodPackages = new ArrayList<>();
-		foodPackages.add(new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.NEW));
-		foodPackages.add(new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.NEW));
+		foodPackages.add(new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), "", List.of(), FoodPackageStatus.NEW));
+		foodPackages.add(new FoodPackage(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), "", List.of(), FoodPackageStatus.NEW));
 
 		when(foodPackageRepository.getAll()).thenReturn(foodPackages);
 

@@ -11,24 +11,24 @@ import java.util.UUID;
 public class FoodPackage extends AggregateRoot {
 	private UUID recipeId;
 	private UUID clientId;
-	private UUID addressId;
+	private String address;
 	private List<Food> foods;
 	private FoodPackageStatus status;
 
 
-	public FoodPackage(UUID recipeId, UUID clientId, UUID addressId, List<Food> foods, FoodPackageStatus status) {
+	public FoodPackage(UUID recipeId, UUID clientId, String address, List<Food> foods, FoodPackageStatus status) {
 		this.recipeId = recipeId;
 		this.clientId = clientId;
-		this.addressId = addressId;
+		this.address = address;
 		this.foods = foods;
 		this.status = status;
 	}
 
-	public FoodPackage(UUID id, UUID recipeId, UUID clientId, UUID addressId, List<Food> foods, FoodPackageStatus status) {
+	public FoodPackage(UUID id, UUID recipeId, UUID clientId, String address, List<Food> foods, FoodPackageStatus status) {
 		this.id = id;
 		this.recipeId = recipeId;
 		this.clientId = clientId;
-		this.addressId = addressId;
+		this.address = address;
 		this.foods = foods;
 		this.status = status;
 	}
@@ -54,8 +54,8 @@ public class FoodPackage extends AggregateRoot {
 		return clientId;
 	}
 
-	public UUID getAddressId() {
-		return addressId;
+	public String getAddress() {
+		return address;
 	}
 
 	public List<Food> getFoods() {

@@ -8,6 +8,7 @@ import factories.foodpackage.FoodPackageFactory;
 import infrastructure.model.FoodPackage;
 import infrastructure.model.FoodPackageStatus;
 import infrastructure.repositories.FoodPackageRepository;
+import infrastructure.repositories.UserRepository;
 import mappers.FoodPackageMapper;
 import org.springframework.stereotype.Component;
 import publisher.DomainEventPublisher;
@@ -21,18 +22,21 @@ public class CreateFoodPackageHandler implements Command.Handler<CreateFoodPacka
 	private final FoodPackageFactory foodPackageFactory;
 
 	private FoodPackageRepository foodPackageRepository;
+	private UserRepository userRepository;
 	private DomainEventPublisher publisher;
 
-	public CreateFoodPackageHandler(FoodPackageRepository foodPackageRepository, DomainEventPublisher publisher) {
+	public CreateFoodPackageHandler(FoodPackageRepository foodPackageRepository, UserRepository userRepository, DomainEventPublisher publisher) {
 		this.foodPackageFactory = new CreateFoodPackage();
 
+		this.userRepository = userRepository;
 		this.foodPackageRepository = foodPackageRepository;
 		this.publisher = publisher;
 	}
 
 	@Override
 	public FoodPackageDTO handle(CreateFoodPackageCommand request) {
-		FoodPackage foodPackage = foodPackageFactory.create(UUID.fromString(request.recipeId), UUID.fromString(request.clientId), UUID.fromString(request.addressId), new ArrayList<>(), FoodPackageStatus.NEW);
+		String address = userRepository.get(UUID.fromString(request.clientId)).getAddress();
+		FoodPackage foodPackage = foodPackageFactory.create(UUID.fromString(request.recipeId), UUID.fromString(request.clientId), address, new ArrayList<>(), FoodPackageStatus.NEW);
 
 		List<DomainEvent> events = foodPackage.getDomainEvents();
 		publisher.publish(events);

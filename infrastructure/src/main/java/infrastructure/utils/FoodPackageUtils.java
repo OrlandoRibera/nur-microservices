@@ -1,7 +1,6 @@
 package infrastructure.utils;
 
 import annotations.Generated;
-import core.BusinessRuleValidationException;
 import infrastructure.model.*;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public class FoodPackageUtils {
 			.filter(Objects::nonNull)
 			.toList();
 
-		return new FoodPackage(jpaModel.getId(), jpaModel.getRecipeId(), jpaModel.getClientId(), jpaModel.getAddressId(), foods, FoodPackageStatus.valueOf(jpaModel.getStatus()));
+		return new FoodPackage(jpaModel.getId(), jpaModel.getRecipeId(), jpaModel.getClientId(), jpaModel.getAddress(), foods, FoodPackageStatus.valueOf(jpaModel.getStatus()));
 	}
 
 	public static FoodPackageJpaModel foodPackageToJpaEntity(
@@ -36,7 +35,7 @@ public class FoodPackageUtils {
 		model.setId(foodPackage.getId());
 		model.setRecipeId(foodPackage.getRecipeId());
 		model.setClientId(foodPackage.getClientId());
-		model.setAddressId(foodPackage.getAddressId());
+		model.setAddress(foodPackage.getAddress());
 		return model;
 	}
 }

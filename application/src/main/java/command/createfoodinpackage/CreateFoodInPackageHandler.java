@@ -53,7 +53,7 @@ public class CreateFoodInPackageHandler implements Command.Handler<CreateFoodInP
         foodPackage.getId(),
         foodPackage.getRecipeId(),
         foodPackage.getClientId(),
-        foodPackage.getAddressId(),
+        foodPackage.getAddress(),
         newFoods,
         foodPackage.getStatus()
       );

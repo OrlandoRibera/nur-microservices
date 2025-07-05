@@ -4,13 +4,11 @@ import an.awesome.pipelinr.Command;
 import dto.FoodPackageDTO;
 
 public class CreateFoodPackageCommand implements Command<FoodPackageDTO> {
-  String recipeId;
-  String clientId;
-  String addressId;
+	String recipeId;
+	String clientId;
 
-  public CreateFoodPackageCommand(String recipeId, String clientId, String addressId) {
-    this.recipeId = recipeId;
-    this.clientId = clientId;
-    this.addressId = addressId;
-  }
+	public CreateFoodPackageCommand(String recipeId, String clientId) {
+		this.recipeId = recipeId;
+		this.clientId = clientId;
+	}
 }

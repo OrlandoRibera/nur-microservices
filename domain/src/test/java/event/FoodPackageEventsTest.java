@@ -25,7 +25,7 @@ class FoodPackageEventsTest {
 		List<Food> foodList = List.of(food1, food2);
 
 		FoodPackageStatus status = FoodPackageStatus.DISPATCHED;
-		FoodPackage foodPackage = new FoodPackage(foodPackageId, foodPackageId, foodPackageId, foodPackageId, foodList, status);
+		FoodPackage foodPackage = new FoodPackage(foodPackageId, foodPackageId, foodPackageId, "", foodList, status);
 
 		// Act
 		FoodPackageStatusEvent event = new FoodPackageStatusEvent(foodPackage);
@@ -53,7 +53,7 @@ class FoodPackageEventsTest {
 
 		// Suponiendo que FoodPackage tiene este constructor
 		FoodPackageStatus status = FoodPackageStatus.PACKED;
-		FoodPackage foodPackage = new FoodPackage(foodPackageId, foodPackageId, foodPackageId, foodPackageId, foodList, status);
+		FoodPackage foodPackage = new FoodPackage(foodPackageId, foodPackageId, foodPackageId, "", foodList, status);
 
 		// Act
 		FoodPackageStatusEvent event = new FoodPackageStatusEvent(foodPackage);

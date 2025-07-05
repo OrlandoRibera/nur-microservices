@@ -16,7 +16,7 @@ class LightFoodPackageTest {
     void testConstructorFromFoodPackage() throws BusinessRuleValidationException {
         UUID recipeId = UUID.randomUUID();
         UUID clientId = UUID.randomUUID();
-        UUID addressId = UUID.randomUUID();
+        String addressId = "";
         List<Food> foods = new ArrayList<>();
         foods.add(new Food("Pizza", FoodType.LUNCH, 300.0f, UUID.randomUUID()));
         foods.add(new Food("Salad", FoodType.DINNER, 150.0f, UUID.randomUUID()));

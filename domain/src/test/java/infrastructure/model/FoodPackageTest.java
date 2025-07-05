@@ -19,7 +19,7 @@ class FoodPackageTest {
 			UUID.randomUUID(),
 			UUID.randomUUID(),
 			UUID.randomUUID(),
-			UUID.randomUUID(),
+			"",
 			new ArrayList<>(),
 			FoodPackageStatus.COOKED
 		);
@@ -34,7 +34,7 @@ class FoodPackageTest {
 		FoodPackage foodPackage = new FoodPackage(
 			UUID.randomUUID(),
 			UUID.randomUUID(),
-			UUID.randomUUID(),
+			"",
 			new ArrayList<>(),
 			FoodPackageStatus.NEW
 		);
@@ -47,7 +47,7 @@ class FoodPackageTest {
 		FoodPackage foodPackage = new FoodPackage(
 			UUID.randomUUID(),
 			UUID.randomUUID(),
-			UUID.randomUUID(),
+			"",
 			new ArrayList<>(),
 			FoodPackageStatus.COOKED
 		);
@@ -62,7 +62,7 @@ class FoodPackageTest {
 		FoodPackage foodPackage = new FoodPackage(
 			UUID.randomUUID(),
 			UUID.randomUUID(),
-			UUID.randomUUID(),
+			"",
 			new ArrayList<>(),
 			FoodPackageStatus.PACKED
 		);
@@ -77,7 +77,7 @@ class FoodPackageTest {
 		FoodPackage foodPackage = new FoodPackage(
 			UUID.randomUUID(),
 			UUID.randomUUID(),
-			UUID.randomUUID(),
+			"",
 			new ArrayList<>(),
 			FoodPackageStatus.NEW
 		);
@@ -93,7 +93,7 @@ class FoodPackageTest {
 		FoodPackage foodPackage = new FoodPackage(
 			UUID.randomUUID(),
 			UUID.randomUUID(),
-			UUID.randomUUID(),
+			"",
 			new ArrayList<>(),
 			FoodPackageStatus.NEW
 		);
@@ -105,9 +105,9 @@ class FoodPackageTest {
 	void createFood() throws BusinessRuleValidationException {
 		UUID recipeId = UUID.randomUUID();
 		UUID clientId = UUID.randomUUID();
-		UUID addressId = UUID.randomUUID();
+		String address = "";
 		List<Food> foods = new ArrayList<>();
-		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
+		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, address, foods, FoodPackageStatus.NEW);
 
 		foodPackage.createFood("Apple", FoodType.BREAKFAST, 95.0f);
 
@@ -121,9 +121,9 @@ class FoodPackageTest {
 	void nextStatus() throws BusinessRuleValidationException {
 		UUID recipeId = UUID.randomUUID();
 		UUID clientId = UUID.randomUUID();
-		UUID addressId = UUID.randomUUID();
+		String address = "";
 		List<Food> foods = new ArrayList<>();
-		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
+		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, address, foods, FoodPackageStatus.NEW);
 
 		foodPackage.nextStatus(FoodPackageStatus.COOKING);
 		assertEquals(FoodPackageStatus.COOKING, foodPackage.getStatus());
@@ -137,9 +137,9 @@ class FoodPackageTest {
 	void getRecipeId() {
 		UUID recipeId = UUID.randomUUID();
 		UUID clientId = UUID.randomUUID();
-		UUID addressId = UUID.randomUUID();
+		String address = "";
 		List<Food> foods = new ArrayList<>();
-		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
+		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, address, foods, FoodPackageStatus.NEW);
 		assertEquals(recipeId, foodPackage.getRecipeId());
 	}
 
@@ -147,9 +147,9 @@ class FoodPackageTest {
 	void getClientId() {
 		UUID recipeId = UUID.randomUUID();
 		UUID clientId = UUID.randomUUID();
-		UUID addressId = UUID.randomUUID();
+		String address = "";
 		List<Food> foods = new ArrayList<>();
-		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
+		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, address, foods, FoodPackageStatus.NEW);
 		assertEquals(clientId, foodPackage.getClientId());
 	}
 
@@ -157,19 +157,19 @@ class FoodPackageTest {
 	void getAddressId() {
 		UUID recipeId = UUID.randomUUID();
 		UUID clientId = UUID.randomUUID();
-		UUID addressId = UUID.randomUUID();
+		String address = "";
 		List<Food> foods = new ArrayList<>();
-		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
-		assertEquals(addressId, foodPackage.getAddressId());
+		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, address, foods, FoodPackageStatus.NEW);
+		assertEquals(address, foodPackage.getAddress());
 	}
 
 	@Test
 	void getFoods() {
 		UUID recipeId = UUID.randomUUID();
 		UUID clientId = UUID.randomUUID();
-		UUID addressId = UUID.randomUUID();
+		String address = "";
 		List<Food> foods = new ArrayList<>();
-		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
+		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, address, foods, FoodPackageStatus.NEW);
 		assertEquals(foods, foodPackage.getFoods());
 	}
 
@@ -177,9 +177,9 @@ class FoodPackageTest {
 	void getStatus() {
 		UUID recipeId = UUID.randomUUID();
 		UUID clientId = UUID.randomUUID();
-		UUID addressId = UUID.randomUUID();
+		String address = "";
 		List<Food> foods = new ArrayList<>();
-		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, addressId, foods, FoodPackageStatus.NEW);
+		FoodPackage foodPackage = new FoodPackage(recipeId, clientId, address, foods, FoodPackageStatus.NEW);
 		assertEquals(FoodPackageStatus.NEW, foodPackage.getStatus());
 	}
 }

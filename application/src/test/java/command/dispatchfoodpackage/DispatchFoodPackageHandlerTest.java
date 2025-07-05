@@ -39,19 +39,19 @@ class DispatchFoodPackageHandlerTest {
 	void shouldDispatchFoodPackageSuccessfully() throws BusinessRuleValidationException {
 		String foodPackageId = UUID.randomUUID().toString();
 		DispatchFoodPackageCommand command = new DispatchFoodPackageCommand(foodPackageId);
-		FoodPackage foodPackage = new FoodPackage(UUID.fromString(foodPackageId), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.PACKED);
+		FoodPackage foodPackage = new FoodPackage(UUID.fromString(foodPackageId), UUID.randomUUID(), UUID.randomUUID(), "", List.of(), FoodPackageStatus.PACKED);
 
 		when(foodPackageRepository.get(UUID.fromString(foodPackageId))).thenReturn(foodPackage);
 		doNothing().when(publisher).publish(foodPackage.getDomainEvents());
 
 		FoodPackageDTO result = handler.handle(command);
 
-		assertEquals(result.addressId(), foodPackage.getAddressId().toString());
+		assertEquals(result.address(), foodPackage.getAddress());
 		assertEquals(result.clientId(), foodPackage.getClientId().toString());
 		assertEquals(result.recipeId(), foodPackage.getRecipeId().toString());
 		assertNotNull(result);
 		assertEquals(result.getClass(), FoodPackageDTO.class);
-		assertEquals(result.status(), FoodPackageStatus.DISPATCHED);
+		assertEquals(FoodPackageStatus.DISPATCHED, result.status());
 	}
 
 	@Test
@@ -68,7 +68,7 @@ class DispatchFoodPackageHandlerTest {
 	void shouldThrowExceptionInvalidStatus() throws BusinessRuleValidationException {
 		String foodPackageId = UUID.randomUUID().toString();
 		DispatchFoodPackageCommand command = new DispatchFoodPackageCommand(foodPackageId);
-		FoodPackage foodPackage = new FoodPackage(UUID.fromString(foodPackageId), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.NEW);
+		FoodPackage foodPackage = new FoodPackage(UUID.fromString(foodPackageId), UUID.randomUUID(), UUID.randomUUID(), "", List.of(), FoodPackageStatus.NEW);
 		when(foodPackageRepository.get(UUID.fromString(foodPackageId))).thenReturn(foodPackage);
 
 		// FoodDTO should be null

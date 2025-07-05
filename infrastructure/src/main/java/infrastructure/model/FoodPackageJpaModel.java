@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,26 +17,28 @@ import java.util.UUID;
 @Table(name = "food_packages")
 public class FoodPackageJpaModel {
 
-  @Id
-  @Column(nullable = false)
-  private UUID id;
+	@Id
+	@Column(nullable = false)
+	private UUID id;
 
-  @Column(nullable = false)
-  private UUID recipeId;
+	@Column(nullable = false)
+	private UUID recipeId;
 
-  @Column(nullable = false)
-  private UUID clientId;
+	@Column(nullable = false)
+	private UUID clientId;
 
-  @Column(nullable = false)
-  private UUID addressId;
+	@Column(nullable = false)
+	private String address;
 
-  @Column(nullable = false)
-  private String status;
+	@Column(nullable = false)
+	private String status;
 
-  @OneToMany(mappedBy = "foodPackage", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<FoodJpaModel> foods = new ArrayList<>();
+	private Date createdAt;
 
-  public FoodPackageJpaModel(UUID id) {
-    this.id = id;
-  }
+	@OneToMany(mappedBy = "foodPackage", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<FoodJpaModel> foods = new ArrayList<>();
+
+	public FoodPackageJpaModel(UUID id) {
+		this.id = id;
+	}
 }

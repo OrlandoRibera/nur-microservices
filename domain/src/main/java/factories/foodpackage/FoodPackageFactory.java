@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface FoodPackageFactory {
-  FoodPackage create(UUID recipeId, UUID clientId, UUID addressId, List<Food> foods, FoodPackageStatus status);
+  FoodPackage create(UUID recipeId, UUID clientId, String address, List<Food> foods, FoodPackageStatus status);
 
-  FoodPackage create(UUID foodPackageId, UUID recipeId, UUID clientId, UUID addressId, List<Food> foods, FoodPackageStatus status);
+  FoodPackage create(UUID foodPackageId, UUID recipeId, UUID clientId, String address, List<Food> foods, FoodPackageStatus status);
 }

@@ -50,7 +50,7 @@ class PackFoodPackageHandlerTest {
 	void shouldThrowExceptionInvalidStatus() throws BusinessRuleValidationException {
 		String foodPackageId = UUID.randomUUID().toString();
 		PackFoodPackageCommand command = new PackFoodPackageCommand(foodPackageId);
-		FoodPackage foodPackage = new FoodPackage(UUID.fromString(foodPackageId), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.NEW);
+		FoodPackage foodPackage = new FoodPackage(UUID.fromString(foodPackageId), UUID.randomUUID(), UUID.randomUUID(), "", List.of(), FoodPackageStatus.NEW);
 		when(foodPackageRepository.get(UUID.fromString(foodPackageId))).thenReturn(foodPackage);
 		doNothing().when(publisher).publish(foodPackage.getDomainEvents());
 
@@ -62,7 +62,7 @@ class PackFoodPackageHandlerTest {
 	void shouldPackFoodPackageSuccessfully() throws BusinessRuleValidationException {
 		String foodPackageId = UUID.randomUUID().toString();
 		PackFoodPackageCommand command = new PackFoodPackageCommand(foodPackageId);
-		FoodPackage foodPackage = new FoodPackage(UUID.fromString(foodPackageId), UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), List.of(), FoodPackageStatus.COOKED);
+		FoodPackage foodPackage = new FoodPackage(UUID.fromString(foodPackageId), UUID.randomUUID(), UUID.randomUUID(), "", List.of(), FoodPackageStatus.COOKED);
 		when(foodPackageRepository.get(UUID.fromString(foodPackageId))).thenReturn(foodPackage);
 
 		FoodPackageDTO result = handler.handle(command);
