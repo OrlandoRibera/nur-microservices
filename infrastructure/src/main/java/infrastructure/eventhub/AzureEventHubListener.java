@@ -28,6 +28,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -114,7 +117,16 @@ public class AzureEventHubListener {
 			DomainEvent<DeliveryDateUpdatedEventBody> event = objectMapper.convertValue(root, new TypeReference<DomainEvent<DeliveryDateUpdatedEventBody>>() {
 			});
 			DeliveryDateUpdatedEventBody data = event.getBody();
-			RecipeDatesIgnored recipeDatesIgnored = new RecipeDatesIgnored(UUID.randomUUID(), UUID.fromString(data.getClientGuid()), Date.from(Instant.parse(data.getFromDate())), Date.from(Instant.parse((data.getToDate()))));
+
+			LocalDateTime ldt = LocalDateTime.parse(data.getFromDate(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+			Instant instant = ldt.toInstant(ZoneOffset.UTC);
+			Date fromDate = Date.from(instant);
+
+			LocalDateTime ldtTo = LocalDateTime.parse(data.getToDate(), DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+			Instant instantTo = ldtTo.toInstant(ZoneOffset.UTC);
+			Date toDate = Date.from(instantTo);
+
+			RecipeDatesIgnored recipeDatesIgnored = new RecipeDatesIgnored(UUID.randomUUID(), UUID.fromString(data.getClientGuid()), fromDate, toDate);
 			recipeDatesIgnoredJpaRepository.create(recipeDatesIgnored);
 
 			logger.info("Delivery date updated for user {} - new Date: {}", data.getClientGuid(), data.getToDate());
