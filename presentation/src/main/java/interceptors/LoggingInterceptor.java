@@ -78,6 +78,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
 					wrapper.copyBodyToResponse(); // important to allow Spring to return body
 					return content;
 				} catch (Exception ignored) {
+					return "{}";
 				}
 			}
 		}
